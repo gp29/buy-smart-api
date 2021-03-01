@@ -1,0 +1,26 @@
+{
+    "LBL_MISSING_PARAMETERS": {
+        "NAME": {
+            "EN": "Missing Parameter"
+        },
+        "MESSAGE": {
+            "EN": "There are one or more parameters missing in the supplied request"
+        }
+    },
+    "LBL_INTERNAL_SERVER": {
+        "NAME": {
+            "EN": "Internal Server Error"
+        },
+        "MESSAGE": {
+            "EN": "Internal server error"
+        }
+    },
+    "LBL_USER_NOT_FOUND": {
+        "NAME": {
+            "EN": "User Not Found"
+        },
+        "MESSAGE": {
+            "EN": "This account has not been setup on the Buy Smart"
+        }
+    }
+}

@@ -1,0 +1,72 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Smart Buy",
+        "description": "Smart Buy",
+        "contact": {
+            "name": "Gaurav Patel",
+            "email": "gaurav.gkp29@gmail.com",
+            "url": "/"
+        }
+    },
+    "paths": {
+        "/auth/sign-in": {
+            "post": {
+                "x-controller-name": "AuthController",
+                "x-operation-name": "Signin",
+                "tags": ["AuthController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Signin",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Optional -> if you get"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Optional -> if you get"
+                                    },
+                                    "social_type": {
+                                        "type": "string",
+                                        "enum": ["google", "facebook"]
+                                    },
+                                    "social_id": {
+                                        "type": "string",
+                                        "description": "Pass only while using social"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "AuthController.Signin"
+            }
+        }
+    },
+    "components": {},
+    "servers": [{
+        "url": "http://localhost:3001/api"
+    }, {
+        "url": ""
+    }]
+}

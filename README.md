@@ -1,2 +1,2 @@
-# biztrust-api
-BizTrustExpress Api
+# buy-smart-api
+Buy Smart Api

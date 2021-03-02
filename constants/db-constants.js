@@ -7,6 +7,7 @@ const config = require('./../config');
  */
 module.exports = {
     dbSchema: {
-        users: 'User'
+        users: 'User',
+        admins: 'Admin',
     }
 };

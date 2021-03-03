@@ -9,5 +9,6 @@ module.exports = {
     dbSchema: {
         users: 'User',
         admins: 'Admin',
+        products: 'Product',
     }
 };

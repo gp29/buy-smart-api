@@ -21,6 +21,7 @@ const request = require('request');
 const routes = require('./routes/index');
 const authBackend = require('./routes/backend/auth');
 const admin = require('./routes/backend/admin');
+const product = require('./routes/backend/product');
 
 // FOR API
 const authAPI = require('./routes/api/auth');
@@ -53,6 +54,7 @@ app.use(multipartyMiddleWare);
 app.use('/',routes);
 app.use('/backend/auth', authBackend);
 app.use('/backend/user', admin);
+app.use('/backend/product', product);
 
 // FOR API
 app.use('/api/auth', authAPI);

@@ -67,6 +67,6 @@
     "servers": [{
         "url": "http://localhost:3001/api"
     }, {
-        "url": ""
+        "url": "http://143.110.249.142:3001/api"
     }]
 }

@@ -56,6 +56,7 @@
 		"password-hash-and-salt": "0.1.4",
 		"r": "0.0.5",
 		"random-string": "^0.2.0",
+		"redis": "^3.0.2",
 		"request": "^2.81.0",
 		"right-pad": "^1.0.1",
 		"serve-favicon": "2.4.3",

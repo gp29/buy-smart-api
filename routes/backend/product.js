@@ -29,4 +29,14 @@ router.post('/import',function (req, res) {
 	});
 });
 
+router.get('/data-insert',function (req, res) {
+	productHandler.dataInsert(req.query, function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
 module.exports = router;

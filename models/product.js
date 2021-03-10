@@ -15,10 +15,6 @@ var productSchema = new Schema({
         type: String,
         default: ''
     },
-    category_id: {
-        type: Number,
-        default: 0
-    },
     Img_key: {
         type: String,
         default: ''

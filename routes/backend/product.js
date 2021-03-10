@@ -29,6 +29,16 @@ router.post('/import',function (req, res) {
 	});
 });
 
+router.post('/action',function (req, res) {
+	productHandler.action(req.body, function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
 router.get('/data-insert',function (req, res) {
 	productHandler.dataInsert(req.query, function (error, response) {
 		if (error) {

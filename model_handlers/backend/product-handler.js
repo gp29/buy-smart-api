@@ -219,7 +219,6 @@ const dataInsert = async (singleRec, done) => {
         singleRec.Product_key = await getProductKeyExtract(singleRec.Product_Url)
 
         singleRec.Img_key = await getImageKeyExtract(singleRec.Img_url)
-
         client.get(singleRec.Img_key, function(err, res) {
             if(!res){
                 client.set(singleRec.Img_key, cnt);

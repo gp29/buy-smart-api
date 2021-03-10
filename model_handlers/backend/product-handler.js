@@ -178,7 +178,7 @@ const getProductKeyExtract = async (url) => {
             else if(url.includes('croma.com') == true || url.includes('reliancedigital.in') == true || url.includes('ajio.com') == true || url.includes('jiomart.com') == true){
                 finalString = url.substring(url.lastIndexOf("/") + 1, url.length);
             }
-            else if(url.includes('croma.com') == true){
+            else if(url.includes('zivame.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
                 finalString = url.split('?')[0].split('.',1)[0];
             }
@@ -242,8 +242,29 @@ const dataInsert = async (singleRec, done) => {
     });
 };
 
+const action = (requestParam, done) =>{
+    if (requestParam['type']=="delete") {
+        query.removeMultiple(dbConstants.dbSchema.products, {
+            'product_id': {
+                $in: requestParam['ids']
+            }
+        }, function(error, data) {
+            if (error) {
+                logger('Error: can not delete ');
+                done(error, null);
+                return;
+            }
+            done(null, data);
+        });        
+    }
+    else{
+        don(null, {})
+    }
+};
+
 module.exports = {
 	get,
     importFile,
-    dataInsert
+    dataInsert,
+    action
 };

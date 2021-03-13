@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const idGenerator = require('./../utils/id-generator');
-const autoIncrement = require('mongoose-auto-increment');
+// const autoIncrement = require('mongoose-auto-increment');
 
-autoIncrement.initialize(mongoose.connection);
+// autoIncrement.initialize(mongoose.connection);
 
 var productSchema = new Schema({
     product_id: {
@@ -109,12 +109,12 @@ productSchema.pre('save', function(callback) {
 });
 
 
-productSchema.plugin(autoIncrement.plugin, {
-    model: 'Product',
-    field: 'Index',
-    startAt: 1,
-    incrementBy: 1
-});
+// productSchema.plugin(autoIncrement.plugin, {
+//     model: 'Product',
+//     field: 'Index',
+//     startAt: 1,
+//     incrementBy: 1
+// });
 
 var Product = mongoose.model('Product', productSchema);
 module.exports = Product;

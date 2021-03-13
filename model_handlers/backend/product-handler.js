@@ -225,7 +225,7 @@ const dataInsert = async (singleRec, done) => {
         client.get(singleRec.Img_key, function(err, res) {
             if(!res){
                 client.set(singleRec.Img_key, cnt);
-                //singleRec.Index = cnt;
+                singleRec.Index = cnt;
                 query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
                     cnt++;
                     done(null, {})

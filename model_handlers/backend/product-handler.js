@@ -214,11 +214,13 @@ const dataInsert = async (singleRec, done) => {
     client.get(singleRec.Img_key, function(err, res) {
         if(!res){
             query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
+                console.log(product.Index)
                 client.set(singleRec.Img_key, product.Index);
                 done(null, {})
             });
         }
         else{
+            console.log("UPDATE")
             res = parseFloat(res)
             query.updateSingle(dbConstants.dbSchema.products, singleRec, {
                 'Index': res

@@ -108,11 +108,13 @@ productSchema.pre('save', function(callback) {
     });
 });
 
+
 productSchema.plugin(autoIncrement.plugin, {
     model: 'Product',
     field: 'Index',
     startAt: 1,
-    incrementBy: 1
+    incrementBy: 1,
+    type: Number
 });
 
 var Product = mongoose.model('Product', productSchema);

@@ -8,8 +8,8 @@ var productSchema = new Schema({
         default: ''
     },
     category_id: {
-        type: Number,
-        default: 0
+        type: String,
+        default: ''
     },
     Index: {
         type: Number,
@@ -44,32 +44,32 @@ var productSchema = new Schema({
         default:''
     },
     Mrp: {
-        type: Number,
-        default:0
+        type: String,
+        default:''
     },
     SellPrice: {
-        type: Number,
-        default:0
+        type: String,
+        default:''
     },
     Discount: {
-        type: Number,
-        default:0
+        type: String,
+        default:''
     },
     Colour: {
         type: String,
         default:''
     },
     Rating_Count: {
-        type: Number,
-        default:0
+        type: String,
+        default:''
     },
     Review_Count: {
-        type: Number,
-        default:0
+        type: String,
+        default:''
     },
     Rating_Star: {
-        type: Number,
-        default:0
+        type: String,
+        default:''
     },
     Time_stamp: {
         type: Date,

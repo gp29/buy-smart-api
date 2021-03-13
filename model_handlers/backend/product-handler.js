@@ -234,7 +234,7 @@ const dataInsert = async (singleRec, done) => {
 //     query.selectWithAndFilterOne(dbConstants.dbSchema.products, {}, {
 //         _id: 0,
 //         Index:1
-//     }, {_id:-1}, {}, async (error, response) => {
+//     }, {Index:-1}, {}, async (error, response) => {
 //         let cnt = 1;
 //         if (!response) {
 //             cnt = 1
@@ -247,9 +247,9 @@ const dataInsert = async (singleRec, done) => {
 //         singleRec.Img_key = await getImageKeyExtract(singleRec.Img_url)
 //         client.get(singleRec.Img_key, function(err, res) {
 //             if(!res){
+//                 client.set(singleRec.Img_key, cnt);
+//                 singleRec.Index = cnt;
 //                 query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
-//                     cnt++;
-//                     client.set(singleRec.Img_key, product.Index);
 //                     done(null, {})
 //                 });
 //             }

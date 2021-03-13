@@ -93,9 +93,9 @@
                 }, {
                     "name": "img_urls",
                     "in": "query",
+                    "description": "Multiple images pass | seperate ex. 1|2|3 like that",
                     "schema": {
-                        "type": "string",
-                        "description": "Multiple images pass | seperate ex. 1|2|3 like that"
+                        "type": "string"
                     }
                 }],
                 "operationId": "ProductController.GetResults"

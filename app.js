@@ -25,6 +25,7 @@ const product = require('./routes/backend/product');
 
 // FOR API
 const authAPI = require('./routes/api/auth');
+const productAPI = require('./routes/api/product');
 
 //other configurations
 const passport = require('passport');
@@ -58,6 +59,7 @@ app.use('/backend/product', product);
 
 // FOR API
 app.use('/api/auth', authAPI);
+app.use('/api/product', productAPI);
 
 app.use(upload());
 

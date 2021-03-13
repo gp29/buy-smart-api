@@ -61,6 +61,45 @@
                 },
                 "operationId": "AuthController.Signin"
             }
+        },
+
+        "/product/get-results": {
+            "get": {
+                "x-controller-name": "ProductController",
+                "x-operation-name": "GetResults",
+                "tags": ["ProductController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "GetResults",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }, {
+                    "name": "img_urls",
+                    "in": "query",
+                    "schema": {
+                        "type": "string",
+                        "description": "Multiple images pass | seperate ex. 1|2|3 like that"
+                    }
+                }],
+                "operationId": "ProductController.GetResults"
+            }
         }
     },
     "components": {},

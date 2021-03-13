@@ -253,6 +253,7 @@ const action = (requestParam, done) =>{
                 done(error, null);
                 return;
             }
+            removeKeyFromRedis(requestParam)
             done(null, data);
         });        
     }
@@ -261,9 +262,29 @@ const action = (requestParam, done) =>{
     }
 };
 
+const removeKeyFromRedis = (requestParam,done) => {
+    query.selectWithAndFilter(dbConstants.dbSchema.products, {
+        'product_id': {
+            $in: requestParam['ids']
+        }
+    }, {
+        _id: 0,
+        Img_key:1
+    }, {_id:-1}, {}, async (error, response) => {
+        async.forEachSeries(response, async function(singleRec, callbackSingleRec) {
+            client.del(singleRec.Img_key);
+            callbackSingleRec();
+        }, function(){
+            return false;
+        });
+    });
+};
+
 module.exports = {
 	get,
     importFile,
     dataInsert,
-    action
+    action,
+    getImageKeyExtract,
+    getProductKeyExtract
 };

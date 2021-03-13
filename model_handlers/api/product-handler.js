@@ -1,0 +1,52 @@
+'use strict';
+
+const config = require('./../../config');
+const logger = require('./../../utils/logger');
+const errors = require('./../../utils/dz-errors-api');
+const dbConstants = require('./../../constants/db-constants');
+const query = require('./../../utils/query-creator-api');
+let asyncLoop = require('async');
+const productHandler = require('./../../model_handlers/backend/product-handler');
+
+const redis = require("redis");
+const client = redis.createClient();
+client.on("error", function(error) {
+    console.error("redis err: ",error);
+});
+
+const getResults = async(requestParam, code) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
+            if(!response){
+                reject(errors.userNotFound(true, code));
+                return;
+            }
+            let indexArr = []
+            let urls = requestParam.img_urls.split('|');
+
+            asyncLoop.forEachSeries(urls, async function(singleRec, callbackSingleRec) {
+                let Img_key = await productHandler.getImageKeyExtract(singleRec);
+                client.get(Img_key, function(err, res) {
+                    if(res){
+                        indexArr.push(parseFloat(res))
+                    }
+                    callbackSingleRec();
+                });
+            }, async function(){
+                let products = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: indexArr}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+                resolve(products)
+                return
+            });
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
+
+
+module.exports = {
+    getResults
+};

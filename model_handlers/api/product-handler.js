@@ -9,8 +9,16 @@ let asyncLoop = require('async');
 const productHandler = require('./../../model_handlers/backend/product-handler');
 
 const redis = require("redis");
-const client = redis.createClient();
+
+//FOR IMAGE/PRODUCT KEY
+const client = redis.createClient("redis://127.0.0.1:6379/0");
 client.on("error", function(error) {
+    console.error("redis err: ",error);
+});
+
+//FOR GET RESULTS
+const client2 = redis.createClient("redis://127.0.0.1:6379/1");
+client2.on("error", function(error) {
     console.error("redis err: ",error);
 });
 

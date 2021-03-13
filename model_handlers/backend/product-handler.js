@@ -12,7 +12,9 @@ let fs = require('fs');
 const product = require('./../../models/product');
 
 const redis = require("redis");
-const client = redis.createClient();
+
+//FOR IMAGE/PRODUCT KEY
+const client = redis.createClient("redis://127.0.0.1:6379/0");
 client.on("error", function(error) {
     console.error("redis err: ",error);
 });
@@ -64,7 +66,7 @@ const importFile = function(req, done){
             client.get(singleRec.Img_key, function(err, res) {
                 if(!res){
                     client.set(singleRec.Img_key, cnt);
-                    singleRec.Index = cnt;
+                    //singleRec.Index = cnt;
                     query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
                         cnt++;
                         callbackSingleRec();

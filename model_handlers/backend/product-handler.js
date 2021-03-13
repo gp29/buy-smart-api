@@ -207,6 +207,7 @@ const getProductKeyExtract = async (url) => {
 };
 
 const dataInsert = async (singleRec, done) => {
+    delete singleRec.Index;
     query.selectWithAndFilterOne(dbConstants.dbSchema.products, {}, {
         _id: 0,
         Index:1
@@ -224,7 +225,7 @@ const dataInsert = async (singleRec, done) => {
         client.get(singleRec.Img_key, function(err, res) {
             if(!res){
                 client.set(singleRec.Img_key, cnt);
-                singleRec.Index = cnt;
+                //singleRec.Index = cnt;
                 query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
                     cnt++;
                     done(null, {})

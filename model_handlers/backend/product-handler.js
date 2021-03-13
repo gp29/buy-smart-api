@@ -233,7 +233,6 @@ const dataInsert = async (singleRec, done) => {
             }
             else{
                 res = parseFloat(res)
-                delete singleRec.Index;
                 query.updateSingle(dbConstants.dbSchema.products, singleRec, {
                     'Index': res
                 }, function(error, product) {

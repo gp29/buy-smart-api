@@ -109,13 +109,12 @@ productSchema.pre('save', function(callback) {
 });
 
 
-// productSchema.plugin(autoIncrement.plugin, {
-//     model: 'Product',
-//     field: 'Index',
-//     startAt: 1,
-//     incrementBy: 1,
-//     type: Number
-// });
+productSchema.plugin(autoIncrement.plugin, {
+    model: 'Product',
+    field: 'Index',
+    startAt: 1,
+    incrementBy: 1
+});
 
 var Product = mongoose.model('Product', productSchema);
 module.exports = Product;

@@ -208,40 +208,62 @@ const getProductKeyExtract = async (url) => {
 
 const dataInsert = async (singleRec, done) => {
     delete singleRec.Index;
-    query.selectWithAndFilterOne(dbConstants.dbSchema.products, {}, {
-        _id: 0,
-        Index:1
-    }, {_id:-1}, {}, async (error, response) => {
-        let cnt = 1;
-        if (!response) {
-            cnt = 1
+    singleRec.Product_key = await getProductKeyExtract(singleRec.Product_Url)
+
+    singleRec.Img_key = await getImageKeyExtract(singleRec.Img_url)
+    client.get(singleRec.Img_key, function(err, res) {
+        if(!res){
+            query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
+                client.set(singleRec.Img_key, product.Index);
+                done(null, {})
+            });
         }
         else{
-            cnt = parseFloat(response.Index) + 1
+            res = parseFloat(res)
+            query.updateSingle(dbConstants.dbSchema.products, singleRec, {
+                'Index': res
+            }, function(error, product) {
+                done(null, {})
+            });
         }
-        singleRec.Product_key = await getProductKeyExtract(singleRec.Product_Url)
-
-        singleRec.Img_key = await getImageKeyExtract(singleRec.Img_url)
-        client.get(singleRec.Img_key, function(err, res) {
-            if(!res){
-                client.set(singleRec.Img_key, cnt);
-                singleRec.Index = cnt;
-                query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
-                    cnt++;
-                    done(null, {})
-                });
-            }
-            else{
-                res = parseFloat(res)
-                query.updateSingle(dbConstants.dbSchema.products, singleRec, {
-                    'Index': res
-                }, function(error, product) {
-                    done(null, {})
-                });
-            }
-        });
     });
 };
+
+// const dataInsert = async (singleRec, done) => {
+//     delete singleRec.Index;
+//     query.selectWithAndFilterOne(dbConstants.dbSchema.products, {}, {
+//         _id: 0,
+//         Index:1
+//     }, {_id:-1}, {}, async (error, response) => {
+//         let cnt = 1;
+//         if (!response) {
+//             cnt = 1
+//         }
+//         else{
+//             cnt = parseFloat(response.Index) + 1
+//         }
+//         singleRec.Product_key = await getProductKeyExtract(singleRec.Product_Url)
+
+//         singleRec.Img_key = await getImageKeyExtract(singleRec.Img_url)
+//         client.get(singleRec.Img_key, function(err, res) {
+//             if(!res){
+//                 query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
+//                     cnt++;
+//                     client.set(singleRec.Img_key, product.Index);
+//                     done(null, {})
+//                 });
+//             }
+//             else{
+//                 res = parseFloat(res)
+//                 query.updateSingle(dbConstants.dbSchema.products, singleRec, {
+//                     'Index': res
+//                 }, function(error, product) {
+//                     done(null, {})
+//                 });
+//             }
+//         });
+//     });
+// };
 
 const action = (requestParam, done) =>{
     if (requestParam['type']=="delete") {

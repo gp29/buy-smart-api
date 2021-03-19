@@ -123,9 +123,9 @@ const dataInsertPost = async(requestParam, code) => {
                 let res = await dataInsert(singleRec);
                 callbackSingleRec();
             }, function(){
-                resolve({});
-                return;
             });
+            resolve({});
+            return;
         } catch (error) {
             console.log(error);
             reject(error)

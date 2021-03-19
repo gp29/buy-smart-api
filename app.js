@@ -22,10 +22,12 @@ const routes = require('./routes/index');
 const authBackend = require('./routes/backend/auth');
 const admin = require('./routes/backend/admin');
 const product = require('./routes/backend/product');
+const banner = require('./routes/backend/banner');
 
 // FOR API
 const authAPI = require('./routes/api/auth');
 const productAPI = require('./routes/api/product');
+const bannerAPI = require('./routes/api/banner');
 
 //other configurations
 const passport = require('passport');
@@ -56,10 +58,12 @@ app.use('/',routes);
 app.use('/backend/auth', authBackend);
 app.use('/backend/user', admin);
 app.use('/backend/product', product);
+app.use('/backend/banner', banner);
 
 // FOR API
 app.use('/api/auth', authAPI);
 app.use('/api/product', productAPI);
+app.use('/api/banner', bannerAPI);
 
 app.use(upload());
 

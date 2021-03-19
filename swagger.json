@@ -175,7 +175,6 @@
                 "operationId": "ProductController.ProductKey"
             }
         },
-
         "/product/data-insert": {
             "get": {
                 "x-controller-name": "ProductController",
@@ -267,6 +266,32 @@
                     }
                 },
                 "operationId": "ProductController.DataInserterPost"
+            }
+        },
+
+        "/banner/list": {
+            "get": {
+                "x-controller-name": "BannerController",
+                "x-operation-name": "List",
+                "tags": ["BannerController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [],
+                "operationId": "BannerController.List"
             }
         }
     },

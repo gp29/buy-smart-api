@@ -22,11 +22,11 @@ client2.get = util.promisify(client2.get);
 const getResults = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
-            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
-            if(!response){
-                reject(errors.userNotFound(true, code));
-                return;
-            }
+            // let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
+            // if(!response){
+            //     reject(errors.userNotFound(true, code));
+            //     return;
+            // }
             let indexArr = []
             let urls = requestParam.img_urls.split('|');
 

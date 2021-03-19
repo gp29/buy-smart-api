@@ -103,6 +103,7 @@ const dataInsert = async(singleRec, code) => {
                 return;
             }
             else{
+                console.log("UPDATE RECORD")
                 await query.updateSingle(dbConstants.dbSchema.products, singleRec, { Index: parseFloat(res) });
                 resolve({});
                 return;

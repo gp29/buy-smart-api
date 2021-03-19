@@ -54,7 +54,47 @@ const getResults = async(requestParam, code) => {
     })
 };
 
+const getImageKey = async(requestParam, code) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
+            if(!response){
+                reject(errors.userNotFound(true, code));
+                return;
+            }
+            let Img_key = await productHandler.getImageKeyExtract(requestParam.Img_url);
+            resolve(Img_key)
+            return
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
+
+const getProductKey = async(requestParam, code) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
+            if(!response){
+                reject(errors.userNotFound(true, code));
+                return;
+            }
+            let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
+            resolve(key)
+            return
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
+
 
 module.exports = {
-    getResults
+    getResults,
+    getImageKey,
+    getProductKey
 };

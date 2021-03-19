@@ -100,12 +100,86 @@
                 }],
                 "operationId": "ProductController.GetResults"
             }
+        },
+        "/product/get-image-key": {
+            "get": {
+                "x-controller-name": "ProductController",
+                "x-operation-name": "ImageKey",
+                "tags": ["ProductController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "ImageKey",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }, {
+                    "name": "Img_url",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "operationId": "ProductController.ImageKey"
+            }
+        },
+        "/product/get-product-key": {
+            "get": {
+                "x-controller-name": "ProductController",
+                "x-operation-name": "ProductKey",
+                "tags": ["ProductController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "ProductKey",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }, {
+                    "name": "Product_Url",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "operationId": "ProductController.ProductKey"
+            }
         }
     },
     "components": {},
     "servers": [{
-        "url": "http://localhost:3001/api"
-    }, {
         "url": "http://143.110.249.142:3001/api"
+    }, {
+        "url": "http://localhost:3001/api"
     }]
 }

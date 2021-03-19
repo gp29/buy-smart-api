@@ -70,4 +70,47 @@ router.get('/get-product-key', async(req, res) => {
     }
 });
 
+
+router.get('/data-insert', async(req, res) => {
+    req.query.code = 'EN';
+    try {
+        if (req.query.Host && req.query.Product_Title && req.query.Product_Url && req.query.Img_url && req.query.SellPrice) {
+            let response = await productHandler.dataInsert(req.query);
+            jsonResponse(res, responseCodes.OK, errors.noError(), response);
+        } else {
+            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
+            return;
+        }
+    } catch (error) {
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.query.code), null);
+            return;
+        }
+    }
+});
+
+router.post('/data-insert-post', async(req, res) => {
+    req.body.code = 'EN';
+    try {
+        if (req.body.Host && req.body.Product_Title && req.body.Product_Url && req.body.Img_url && req.body.SellPrice) {
+            let response = await productHandler.dataInsert(req.body);
+            jsonResponse(res, responseCodes.OK, errors.noError(), response);
+        } else {
+            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.body.code), null);
+            return;
+        }
+    } catch (error) {
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.body.code), null);
+            return;
+        }
+    }
+});
+
 module.exports = router;

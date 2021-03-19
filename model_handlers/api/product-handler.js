@@ -92,9 +92,39 @@ const getProductKey = async(requestParam, code) => {
     })
 };
 
+const dataInsert = async(singleRec, code) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            delete singleRec.Index;
+            singleRec.Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url)
+
+            singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
+            client.get(singleRec.Img_key, async function(err, res) {
+                if(!res){
+                    let product = await query.insertSingle(dbConstants.dbSchema.products, singleRec);
+                    client.set(singleRec.Img_key, product.Index);
+                    resolve({});
+                    return;
+                }
+                else{
+                    res = parseFloat(res)
+                    await query.updateSingle(dbConstants.dbSchema.products, singleRec, { Index: res });
+                    resolve({});
+                    return;
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
+
 
 module.exports = {
     getResults,
     getImageKey,
-    getProductKey
+    getProductKey,
+    dataInsert
 };

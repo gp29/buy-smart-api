@@ -206,31 +206,6 @@ const getProductKeyExtract = async (url) => {
     })
 };
 
-const dataInsert = async (singleRec, done) => {
-    delete singleRec.Index;
-    singleRec.Product_key = await getProductKeyExtract(singleRec.Product_Url)
-
-    singleRec.Img_key = await getImageKeyExtract(singleRec.Img_url)
-    client.get(singleRec.Img_key, function(err, res) {
-        if(!res){
-            query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
-                console.log(product.Index)
-                client.set(singleRec.Img_key, product.Index);
-                done(null, {})
-            });
-        }
-        else{
-            console.log("UPDATE")
-            res = parseFloat(res)
-            query.updateSingle(dbConstants.dbSchema.products, singleRec, {
-                'Index': res
-            }, function(error, product) {
-                done(null, {})
-            });
-        }
-    });
-};
-
 // const dataInsert = async (singleRec, done) => {
 //     delete singleRec.Index;
 //     query.selectWithAndFilterOne(dbConstants.dbSchema.products, {}, {
@@ -309,7 +284,6 @@ const removeKeyFromRedis = (requestParam,done) => {
 module.exports = {
 	get,
     importFile,
-    dataInsert,
     action,
     getImageKeyExtract,
     getProductKeyExtract

@@ -39,18 +39,4 @@ router.post('/action',function (req, res) {
 	});
 });
 
-router.get('/data-insert',function (req, res) {
-	if(!req.query.Host || !req.query.Product_Title || !req.query.Product_Url || !req.query.Img_url || !req.query.SellPrice){
-		jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, 'EN'), null);
-        return;
-	}
-	productHandler.dataInsert(req.query, function (error, response) {
-		if (error) {
-			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
-			return;
-		}
-		jsonResponse(res, responseCodes.OK, errors.noError(), response);
-	});
-});
-
 module.exports = router;

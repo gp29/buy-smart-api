@@ -39,7 +39,7 @@ const app = express();
 app.use(favicon(path.join(__dirname, './public/img', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
+app.use(bodyParser.urlencoded({extended: true, limit: '50mb', parameterLimit: 1000000}));
 app.use(cookieParser());
 app.use(require('express-session')({
     secret: 'keyboard cat',

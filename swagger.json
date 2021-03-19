@@ -258,20 +258,8 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "Host": {
-                                        "type": "string"
-                                    },
-                                    "Product_Url": {
-                                        "type": "string"
-                                    },
-                                    "Product_Title": {
-                                        "type": "string"
-                                    },
-                                    "Img_url": {
-                                        "type": "string"
-                                    },
-                                    "SellPrice": {
-                                        "type": "string"
+                                    "data": {
+                                        "type": "array"
                                     }
                                 }
                             }

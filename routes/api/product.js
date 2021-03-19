@@ -11,7 +11,7 @@ router.get('/get-results', async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id && req.query.img_urls) {
-            let response = await productHandler.getResults(req.query);
+            let response = await productHandler.getResults(req.query, req.query.code);
             jsonResponse(res, responseCodes.OK, errors.noError(), response);
         } else {
             jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
@@ -32,7 +32,7 @@ router.get('/get-image-key', async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id && req.query.Img_url) {
-            let response = await productHandler.getImageKey(req.query);
+            let response = await productHandler.getImageKey(req.query, req.query.code);
             jsonResponse(res, responseCodes.OK, errors.noError(), response);
         } else {
             jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
@@ -53,7 +53,7 @@ router.get('/get-product-key', async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id && req.query.Product_Url) {
-            let response = await productHandler.getProductKey(req.query);
+            let response = await productHandler.getProductKey(req.query, req.query.code);
             jsonResponse(res, responseCodes.OK, errors.noError(), response);
         } else {
             jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
@@ -75,7 +75,7 @@ router.get('/data-insert', async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.Host && req.query.Product_Title && req.query.Product_Url && req.query.Img_url && req.query.SellPrice) {
-            let response = await productHandler.dataInsert(req.query);
+            let response = await productHandler.dataInsert(req.query, req.query.code);
             jsonResponse(res, responseCodes.OK, errors.noError(), response);
         } else {
             jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
@@ -95,13 +95,8 @@ router.get('/data-insert', async(req, res) => {
 router.post('/data-insert-post', async(req, res) => {
     req.body.code = 'EN';
     try {
-        if (req.body.Host && req.body.Product_Title && req.body.Product_Url && req.body.Img_url && req.body.SellPrice) {
-            let response = await productHandler.dataInsert(req.body);
-            jsonResponse(res, responseCodes.OK, errors.noError(), response);
-        } else {
-            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.body.code), null);
-            return;
-        }
+        let response = await productHandler.dataInsertPost(req.body, req.body.code);
+        jsonResponse(res, responseCodes.OK, errors.noError(), response);
     } catch (error) {
         try {
             jsonResponse(res, error.code, errors.formatErrorForWire(error), null);

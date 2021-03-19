@@ -115,10 +115,29 @@ const dataInsert = async(singleRec, code) => {
     })
 };
 
+const dataInsertPost = async(requestParam, code) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
+                let res = await dataInsert(singleRec);
+                callbackSingleRec();
+            }, function(){
+                resolve({});
+                return;
+            });
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
+
 
 module.exports = {
     getResults,
     getImageKey,
     getProductKey,
-    dataInsert
+    dataInsert,
+    dataInsertPost
 };

@@ -63,6 +63,37 @@
             }
         },
 
+        "/product/feed": {
+            "get": {
+                "x-controller-name": "ProductController",
+                "x-operation-name": "Feed",
+                "tags": ["ProductController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Feed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "operationId": "ProductController.Feed"
+            }
+        },
         "/product/get-results": {
             "get": {
                 "x-controller-name": "ProductController",

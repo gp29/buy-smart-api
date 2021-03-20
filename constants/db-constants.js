@@ -12,5 +12,6 @@ module.exports = {
         products: 'Product',
         banners: 'Banner',
         results: 'Result',
+        feeds: 'Feed',
     }
 };

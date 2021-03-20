@@ -6,6 +6,7 @@ const errors = require('./../../utils/dz-errors-api');
 const dbConstants = require('./../../constants/db-constants');
 const query = require('./../../utils/query-creator-api');
 const idGenerator = require('./../../utils/id-generator');
+let _ = require('underscore');
 let asyncLoop = require('async');
 const result = require('./../../models/result');
 const productHandler = require('./../../model_handlers/backend/product-handler');
@@ -41,6 +42,7 @@ const getResults = async(requestParam, code) => {
                 callbackSingleRec();
             }, async function(){
                 let products = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: indexArr}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+                await query.updateMultiple(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
                 insertResultData(products);
                 resolve(products)
                 return
@@ -186,11 +188,49 @@ const getCacheResults = async(requestParam, code) => {
     })
 };
 
+const feed = async(requestParam, code) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
+            if(!response){
+                reject(errors.userNotFound(true, code));
+                return;
+            }
+
+            let arr = [];
+            let feeds = await query.selectWithAnd(dbConstants.dbSchema.feeds, {}, { _id: 0, Index:1} );
+            arr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(feeds, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+
+            let skip = 0;
+            let limit = 100
+            let data = await query.selectWithAndFilter(dbConstants.dbSchema.products, {Index: {$nin: _.pluck(feeds, 'Index')}}, {
+                _id: 0,
+                created_at: 0,
+                updated_at: 0,
+                __v: 0,
+            }, {Query_count: -1}, {
+                skip,
+                limit
+            });
+            arr.push(data);
+            arr = _.flatten(arr)
+            resolve(arr);
+            return;
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
+
 
 module.exports = {
     getResults,
     getImageKey,
     getProductKey,
     dataInsert,
-    dataInsertPost
+    dataInsertPost,
+    getCacheResults,
+    feed
 };

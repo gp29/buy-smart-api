@@ -44,48 +44,33 @@ const get = function(requestParam, done){
 };
 
 const importFile = function(req, done){
-    query.selectWithAndFilterOne(dbConstants.dbSchema.products, {}, {
-        _id: 0,
-        Index:1
-    }, {_id:-1}, {}, (error, response) => {
-        let cnt = 1;
-        if (!response) {
-            cnt = 1
-        }
-        else{
-            cnt = parseFloat(response.Index) + 1
-        }
-        let requestParam = fs.readFileSync(req.files.json_file.path, "utf8");
-        requestParam = JSON.parse(requestParam);
-        async.forEachSeries(requestParam, async function(singleRec, callbackSingleRec) {
+    let requestParam = fs.readFileSync(req.files.json_file.path, "utf8");
+    requestParam = JSON.parse(requestParam);
+    async.forEachSeries(requestParam, async function(singleRec, callbackSingleRec) {
 
-            singleRec.Product_key = await getProductKeyExtract(singleRec.Product_Url)
+        singleRec.Product_key = await getProductKeyExtract(singleRec.Product_Url)
 
-            singleRec.Img_key = await getImageKeyExtract(singleRec.Img_url)
+        singleRec.Img_key = await getImageKeyExtract(singleRec.Img_url)
 
-            client.get(singleRec.Img_key, function(err, res) {
-                if(!res){
-                    client.set(singleRec.Img_key, cnt);
-                    //singleRec.Index = cnt;
-                    query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
-                        cnt++;
-                        callbackSingleRec();
-                    });
-                }
-                else{
-                    res = parseFloat(res)
-                    delete singleRec.Index;
-                    query.updateSingle(dbConstants.dbSchema.products, singleRec, {
-                        'Index': res
-                    }, function(error, product) {
-                        callbackSingleRec();
-                    });
-                }
-            });
-
-        },function(){
-            done(null, {});
+        client.get(singleRec.Img_key, function(err, res) {
+            if(!res){
+                query.insertSingle(dbConstants.dbSchema.products, singleRec, function (error, product) {
+                    client.set(singleRec.Img_key, product.Index);
+                    callbackSingleRec();
+                });
+            }
+            else{
+                delete singleRec.Index;
+                query.updateSingle(dbConstants.dbSchema.products, singleRec, {
+                    'Index': parseFloat(res)
+                }, function(error, product) {
+                    callbackSingleRec();
+                });
+            }
         });
+
+    },function(){
+        done(null, {});
     });
 };
 

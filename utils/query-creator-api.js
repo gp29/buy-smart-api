@@ -208,4 +208,25 @@ module.exports = {
             });
         })
     },
+
+    /**
+     * Select query with sorting where comparison is done by unique columns and values.
+     *
+     * @collectionName {string} collectionName to select from
+     * @returns {array} - JSON array of objects
+     */
+    selectWithAndFilter: function(collectionName, comparisonColumnsAndValues, columnsToSelect, columnToSort, columnsToPagination) {
+        return new Promise((resolve, reject) => {
+            const dbCollection = mongoose.model(collectionName);
+            dbCollection.find(comparisonColumnsAndValues, columnsToSelect, columnsToPagination, function(error, data) {
+                if (error) {
+                    logger('Error: making async main query');
+                    reject(error);
+                    return;
+                }
+                resolve(data);
+                return
+            }).sort(columnToSort);
+        })
+    },
 };

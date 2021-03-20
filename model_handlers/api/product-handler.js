@@ -9,6 +9,7 @@ const idGenerator = require('./../../utils/id-generator');
 let _ = require('underscore');
 let asyncLoop = require('async');
 const result = require('./../../models/result');
+const Product = require('./../../models/product');
 const productHandler = require('./../../model_handlers/backend/product-handler');
 
 const redis = require("redis");
@@ -119,6 +120,14 @@ const getProductKey = async(requestParam, code) => {
 const dataInsert = async(singleRec, code) => {
     return new Promise(async(resolve, reject) => {
         try {
+            let response = await query.selectWithAnd(dbConstants.dbSchema.products, {}, { _id: 0, product_id:1} );
+            if(response.length == 0){
+                Product.nextCount(function(err, count) {
+                    Product.resetCount(function(err, nextCount) {
+                    });
+                });
+            }
+            
             delete singleRec.Index;
             singleRec.Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url)
 
@@ -149,6 +158,13 @@ const dataInsertPost = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             console.log(requestParam.data.length)
+            let response = await query.selectWithAnd(dbConstants.dbSchema.products, {}, { _id: 0, product_id:1} );
+            if(response.length == 0){
+                Product.nextCount(function(err, count) {
+                    Product.resetCount(function(err, nextCount) {
+                    });
+                });
+            }
             asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
                 let res = await dataInsert(singleRec);
                 callbackSingleRec();

@@ -118,7 +118,7 @@ productSchema.plugin(autoIncrement.plugin, {
 var Product = mongoose.model('Product', productSchema);
 module.exports = Product;
 
-// Product.nextCount(function(err, count) {
-//     Product.resetCount(function(err, nextCount) {
-//     });
-// });
+Product.nextCount(function(err, count) {
+    Product.resetCount(function(err, nextCount) {
+    });
+});

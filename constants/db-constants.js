@@ -11,5 +11,6 @@ module.exports = {
         admins: 'Admin',
         products: 'Product',
         banners: 'Banner',
+        results: 'Result',
     }
 };

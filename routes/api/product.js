@@ -108,4 +108,25 @@ router.post('/data-insert-post', async(req, res) => {
     }
 });
 
+router.get('/get-cache-results', async(req, res) => {
+    req.query.code = 'EN';
+    try {
+        if (req.query.user_id && req.query.Product_Url) {
+            let response = await productHandler.getCacheResults(req.query, req.query.code);
+            jsonResponse(res, responseCodes.OK, errors.noError(), response);
+        } else {
+            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
+            return;
+        }
+    } catch (error) {
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.query.code), null);
+            return;
+        }
+    }
+});
+
 module.exports = router;

@@ -140,6 +140,36 @@ module.exports = {
     },
 
     /**
+     * Updates a multiple record
+     *
+     * @collectionName {string}collectionName to update
+     * @columnsToUpdate {Object}  Columns and values to update
+     * @targetColumnsAndValues {Object} targetColumnsAndValues to identify the update record
+     *
+     * @returns {object} - JSON object
+     */
+
+    updateMultiple: function(collectionName, columnsToUpdate, targetColumnsAndValues) {
+
+        return new Promise((resolve, reject) => {
+            const dbCollection = mongoose.model(collectionName);
+            var options = {
+                multi: true
+            };
+            dbCollection.updateMany(targetColumnsAndValues, {
+                $set: columnsToUpdate
+            }, options, function(error, data) {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(data);
+                return
+            });
+        })
+    },
+
+    /**
        * Deletes a multiple record
        *
        * @collectionName {string}collectionName to update

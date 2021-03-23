@@ -30,6 +30,7 @@
 		"express-session": "^1.15.4",
 		"fcm-node": "^1.2.1",
 		"file-system": "^2.2.2",
+		"firebase": "^5.9.0",
 		"firebase-admin": "^5.12.0",
 		"fs": "0.0.2",
 		"geofire": "^5.0.1",

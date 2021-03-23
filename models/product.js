@@ -90,6 +90,18 @@ var productSchema = new Schema({
         type: Number,
         default:0
     },
+    Other1: {
+        type: String,
+        default:''
+    },
+    Other2: {
+        type: String,
+        default:''
+    },
+    Other3: {
+        type: String,
+        default:''
+    },
     created_at: {
         type: Date,
         default: Date.now

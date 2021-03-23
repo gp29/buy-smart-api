@@ -13,5 +13,6 @@ module.exports = {
         banners: 'Banner',
         results: 'Result',
         feeds: 'Feed',
+        lotties: 'Lottie',
     }
 };

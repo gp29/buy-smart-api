@@ -229,6 +229,7 @@ const getProductKeyExtract = async (url) => {
 
 const action = (requestParam, done) =>{
     if (requestParam['type']=="delete") {
+        removeKeyFromRedis(requestParam)
         query.removeMultiple(dbConstants.dbSchema.products, {
             'product_id': {
                 $in: requestParam['ids']
@@ -239,7 +240,6 @@ const action = (requestParam, done) =>{
                 done(error, null);
                 return;
             }
-            removeKeyFromRedis(requestParam)
             done(null, data);
         });        
     }
@@ -258,8 +258,9 @@ const removeKeyFromRedis = (requestParam,done) => {
         Img_key:1
     }, {_id:-1}, {}, async (error, response) => {
         async.forEachSeries(response, async function(singleRec, callbackSingleRec) {
-            client.del(singleRec.Img_key);
-            callbackSingleRec();
+            client.del(singleRec.Img_key, function(err, res) {
+                callbackSingleRec();
+            });
         }, function(){
             return false;
         });

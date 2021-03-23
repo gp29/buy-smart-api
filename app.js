@@ -24,6 +24,7 @@ const admin = require('./routes/backend/admin');
 const product = require('./routes/backend/product');
 const banner = require('./routes/backend/banner');
 const feed = require('./routes/backend/feed');
+const lottie = require('./routes/backend/lottie');
 
 // FOR API
 const authAPI = require('./routes/api/auth');
@@ -61,6 +62,7 @@ app.use('/backend/user', admin);
 app.use('/backend/product', product);
 app.use('/backend/banner', banner);
 app.use('/backend/feed', feed);
+app.use('/backend/lottie', lottie);
 
 // FOR API
 app.use('/api/auth', authAPI);

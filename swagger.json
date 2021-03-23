@@ -62,6 +62,37 @@
                 "operationId": "AuthController.Signin"
             }
         },
+        "/auth/get-lottie-animation": {
+            "get": {
+                "x-controller-name": "AuthController",
+                "x-operation-name": "LottieAnimation",
+                "tags": ["AuthController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "LottieAnimation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "operationId": "AuthController.LottieAnimation"
+            }
+        },
 
         "/product/feed": {
             "get": {

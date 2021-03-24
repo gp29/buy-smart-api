@@ -37,6 +37,9 @@ const getResults = async(requestParam, code) => {
 
             asyncLoop.forEachSeries(urls, async function(singleRec, callbackSingleRec) {
                 let Img_key = await productHandler.getImageKeyExtract(singleRec);
+                console.log("=======================")
+                console.log(singleRec)
+                console.log(Img_key)
                 let res = await client.get(Img_key);
                 if(res){
                     indexArr.push(parseFloat(res))

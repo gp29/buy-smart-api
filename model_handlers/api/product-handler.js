@@ -201,8 +201,10 @@ const getCacheResults = async(requestParam, code) => {
                 reject(errors.userNotFound(true, code));
                 return;
             }
+            console.log(requestParam.Product_Url)
             let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
             let res = await client2.get(key);
+            console.log(res)
             if(res){
                 arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: res}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
             }

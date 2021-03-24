@@ -36,9 +36,6 @@ const getResults = async(requestParam, code) => {
 
             asyncLoop.forEachSeries(urls, async function(singleRec, callbackSingleRec) {
                 let Img_key = await productHandler.getImageKeyExtract(singleRec);
-                console.log("=======================")
-                console.log(singleRec)
-                console.log(Img_key)
                 let res = await client.get(Img_key);
                 if(res){
                     indexArr.push(parseFloat(res))
@@ -49,7 +46,7 @@ const getResults = async(requestParam, code) => {
                 let products = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: indexArr}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
                 await query.updateMultiple(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
                 insertResultData(products);
-                console.log(products)
+                console.log(products.length)
                 resolve(products)
                 return
             });

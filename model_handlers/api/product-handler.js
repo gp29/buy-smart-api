@@ -33,6 +33,7 @@ const getResults = async(requestParam, code) => {
             }
             let indexArr = []
             let urls = requestParam.img_urls.split('|');
+            console.log(urls)
 
             asyncLoop.forEachSeries(urls, async function(singleRec, callbackSingleRec) {
                 let Img_key = await productHandler.getImageKeyExtract(singleRec);

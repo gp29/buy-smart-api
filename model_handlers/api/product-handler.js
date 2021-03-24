@@ -46,7 +46,6 @@ const getResults = async(requestParam, code) => {
                 let products = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: indexArr}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
                 await query.updateMultiple(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
                 insertResultData(products);
-                console.log(products.length)
                 resolve(products)
                 return
             });
@@ -152,7 +151,6 @@ const dataInsert = async(singleRec, code) => {
 const dataInsertPost = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
-            requestParam.data = JSON.parse(requestParam.data)
             console.log(requestParam.data.length)
             asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
                 let res = await dataInsert(singleRec);
@@ -198,10 +196,8 @@ const getCacheResults = async(requestParam, code) => {
                 reject(errors.userNotFound(true, code));
                 return;
             }
-            console.log(requestParam.Product_Url)
             let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
             let res = await client2.get(key);
-            console.log(res)
             if(res){
                 arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: res}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
             }

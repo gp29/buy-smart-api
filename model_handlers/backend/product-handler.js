@@ -240,7 +240,18 @@ const action = (requestParam, done) =>{
                 done(error, null);
                 return;
             }
-            done(null, data);
+            query.removeMultiple(dbConstants.dbSchema.results, {
+                'product_id': {
+                    $in: requestParam['ids']
+                }
+            }, function(error, data) {
+                if (error) {
+                    logger('Error: can not delete ');
+                    done(error, null);
+                    return;
+                }
+                done(null, data);
+            });
         });        
     }
     else{

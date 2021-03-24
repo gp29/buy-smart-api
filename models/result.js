@@ -7,6 +7,10 @@ var resultSchema = new Schema({
         type: String,
         default: ''
     },
+    product_id: {
+        type: String,
+        default: ''
+    },
     category_id: {
         type: String,
         default: ''

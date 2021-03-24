@@ -151,10 +151,27 @@ const dataInsertPost = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             console.log(requestParam.data.length)
-            console.log(requestParam.data)
-            requestParam.data = JSON.parse(requestParam.data)
             asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
-                console.log(singleRec)
+                let res = await dataInsert(singleRec);
+                callbackSingleRec();
+            }, function(){
+            });
+            resolve({});
+            return;
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
+
+const dataInsertAndroid = async(requestParam, code) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            requestParam.data = JSON.parse(requestParam.data)
+            console.log(requestParam.data.length)
+            asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
                 let res = await dataInsert(singleRec);
                 callbackSingleRec();
             }, function(){
@@ -237,5 +254,6 @@ module.exports = {
     dataInsert,
     dataInsertPost,
     getCacheResults,
-    feed
+    feed,
+    dataInsertAndroid
 };

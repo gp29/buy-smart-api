@@ -367,6 +367,44 @@
                 "operationId": "ProductController.DataInserterPost"
             }
         },
+        "/product/data-insert-android": {
+            "post": {
+                "x-controller-name": "ProductController",
+                "x-operation-name": "DataInserterAndroid",
+                "tags": ["ProductController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "DataInserterAndroid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "type": "array"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "ProductController.DataInserterAndroid"
+            }
+        },
 
         "/banner/list": {
             "get": {

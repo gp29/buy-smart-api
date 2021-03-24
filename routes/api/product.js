@@ -108,6 +108,22 @@ router.post('/data-insert-post', async(req, res) => {
     }
 });
 
+router.post('/data-insert-android', async(req, res) => {
+    req.body.code = 'EN';
+    try {
+        let response = await productHandler.dataInsertAndroid(req.body, req.body.code);
+        jsonResponse(res, responseCodes.OK, errors.noError(), response);
+    } catch (error) {
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.body.code), null);
+            return;
+        }
+    }
+});
+
 router.get('/get-cache-results', async(req, res) => {
     req.query.code = 'EN';
     try {

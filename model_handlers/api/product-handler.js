@@ -151,6 +151,7 @@ const dataInsert = async(singleRec, code) => {
 const dataInsertPost = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
+            requestParam.data = JSON.parse(requestParam.data)
             console.log(requestParam.data.length)
             asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
                 let res = await dataInsert(singleRec);

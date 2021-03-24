@@ -25,6 +25,7 @@ const product = require('./routes/backend/product');
 const banner = require('./routes/backend/banner');
 const feed = require('./routes/backend/feed');
 const lottie = require('./routes/backend/lottie');
+const version = require('./routes/backend/version');
 
 // FOR API
 const authAPI = require('./routes/api/auth');
@@ -63,6 +64,7 @@ app.use('/backend/product', product);
 app.use('/backend/banner', banner);
 app.use('/backend/feed', feed);
 app.use('/backend/lottie', lottie);
+app.use('/backend/version', version);
 
 // FOR API
 app.use('/api/auth', authAPI);

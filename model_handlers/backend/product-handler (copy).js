@@ -82,25 +82,10 @@ const getImageKeyExtract = async (url) => {
                url = url.substring(url.lastIndexOf("/") + 1, url.length);
                finalString = url.split('.',1)[0];
             }
-            else if(url.includes('flixcart.com') == true || url.includes('flipkart.com') == true){
-                finalString = url.split('?')[0].split('/')[11].replace(".jpeg","")
+            else if(url.includes('flixcart.com') == true || url.includes('flipkart.com') == true || url.includes('netmeds.com') == true || url.includes('zivame.com') == true || url.includes('ajio.com') == true || url.includes('jiomart.com') == true){
+                finalString = url.split('/')[6]
             }
-            else if(url.includes('netmeds.com') == true ){
-                finalString = url.split('/')[5]
-            }
-            else if(url.includes('zivame.com') == true ){
-                finalString = url.split('/')[5]
-            }
-            else if(url.includes('ajio.com') == true ){
-                finalString = url.split('/')[5]
-            }
-            else if(url.includes('jiomart.com') == true ){
-                finalString = url.split('/')[5]
-            }
-            else if(url.includes('shopclues.com') == true ){
-                finalString = url.split('/')[8].replace(".jpg","")
-            }
-            else if(url.includes('pharmeasy.in') == true ){
+            else if(url.includes('shopclues.com') == true || url.includes('pharmeasy.in') == true){
                 finalString = url.split('/')[5]
             }
             else if(url.includes('paytm.com') == true){

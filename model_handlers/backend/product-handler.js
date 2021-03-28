@@ -78,33 +78,66 @@ const getImageKeyExtract = async (url) => {
     return new Promise(async(resolve, reject) => {
         try {
             let finalString;
-            if(url.includes('amazon.com') == true || url.includes('myntassets.com') == true || url.includes('nykaa.com') == true || url.includes('cloudfront.net') == true || url.includes('croma.com') == true || url.includes('fcglcdn.com') == true){
+            if(url.includes('amazon.com') == true){
                url = url.substring(url.lastIndexOf("/") + 1, url.length);
                finalString = url.split('.',1)[0];
             }
+            else if(url.includes('myntassets.com') == true){
+                url = url.substring(url.lastIndexOf("/") + 1, url.length);
+                finalString = url.split('.',1)[0];
+            }
+            else if(url.includes('croma.com') == true){
+                url = url.substring(url.lastIndexOf("/") + 1, url.length);
+                finalString = url.split('.',1)[0];
+            }
+            else if(url.includes('fcglcdn.com') == true){
+                url = url.substring(url.lastIndexOf("/") + 1, url.length);
+                finalString = url.split('.',1)[0];
+            }
+
             else if(url.includes('flixcart.com') == true || url.includes('flipkart.com') == true){
-                finalString = url.split('?')[0].split('/')[11].replace(".jpeg","")
+                finalString = url.split('?')[0].split('/')[url.length-1].replace(".jpeg","")
             }
             else if(url.includes('netmeds.com') == true ){
-                finalString = url.split('/')[5]
+                finalString = url.split('/')[6]
+            }
+            else if(url.includes('cloudfront.net') == true ){
+                finalString = url.split('/')[url.length-1].split('_')[0]
             }
             else if(url.includes('zivame.com') == true ){
-                finalString = url.split('/')[5]
+                finalString = url.split('/')[url.length-2]
+            }
+            else if(url.includes('cloudinary.com') == true ){
+                if (url.includes('upload') == true) {
+                    url.replace('/upload','')
+                    finalString = url.split('/')[url.length-1].split('.')[0]
+                }
+                else{
+                    finalString = url.split('/')[url.length-2]
+                }
+
+                finalString = url.split('?')[0].split('/')[url.length-1].split('_')[0]
+            }
+            else if(url.includes('nykaa.com') == true ){
+                finalString = url.split('?')[0].split('/')[url.length-1].split('_')[0]
             }
             else if(url.includes('ajio.com') == true ){
-                finalString = url.split('/')[5]
+                finalString = url.split('/')[url.length-2]
             }
             else if(url.includes('jiomart.com') == true ){
-                finalString = url.split('/')[5]
+                finalString = url.split('/')[6]
+            }
+            else if(url.includes('bigbasket.com') == true ){
+                finalString = url.split('/')[url.length-1].split('.')[0]
             }
             else if(url.includes('shopclues.com') == true ){
-                finalString = url.split('/')[8].replace(".jpg","")
+                finalString = url.split('/')[8].split('.')[0]
             }
             else if(url.includes('pharmeasy.in') == true ){
                 finalString = url.split('/')[5]
             }
             else if(url.includes('paytm.com') == true){
-                finalString = url.split('/')[8]
+                finalString = url.split('/')[url.length-2]
             }
             else if(url.includes('sdlcdn.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
@@ -113,10 +146,10 @@ const getImageKeyExtract = async (url) => {
             }
             else if(url.includes('reliancedigital.in') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
-                finalString = url.split('.',1)[0].split('?')[0]
+                finalString = url.split('.',1)[0].split('?')[0].split('-i-')[0]
             }
             else if(url.includes('tatacliq.com') == true){
-                finalString = url.split('/')[6].split('_')[0]
+                finalString = url.split('/')[url.length-1].split('_')[0]
             }
             else{
                 finalString = /[^\\\/:*?"<>|\r\n]+$/i.exec(url)[0]
@@ -136,62 +169,80 @@ const getProductKeyExtract = async (url) => {
         try {
             let finalString;
             if(url.includes('amazon.in') == true){
-                finalString = url.split('/')[5]
+                finalString = 'AM' + url.split('/')[5]
             }
             else if(url.includes('flipkart.com') == true){
-                if(url.split('/')[6] == undefined){
-                    finalString = url.split('/')[5].split('?')[0]
-                }
-                else{
-                    finalString = url.split('/')[6].split('?')[0]
-                }
+               
+                finalString = 'FL' + url.split('?')[0].split('/')[url.length-1]
+                
             }
-            else if(url.includes('shopclues.com') == true || url.includes('pharmeasy.in') == true || url.includes('nykaafashion.com') == true || url.includes('vijaysales.com') == true || url.includes('1mg.com') == true){
+            else if(url.includes('shopclues.com') == true ){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
                 url = url.split('.',1)[0].split('-');
-                finalString = url.slice(-1)[0]
+                finalString = 'SC' + url.slice(-1)[0]
+            }
+            else if(url.includes('pharmeasy.in') == true ){
+                url = url.substring(url.lastIndexOf("/") + 1, url.length);
+                url = url.split('.',1)[0].split('-');
+                finalString ='PH' + url.slice(-1)[0]
+            }
+            else if(url.includes('nykaafashion.com') == true ){
+                finalString ='NF' + url.split('/')[url.length-1]
+            }
+            else if(url.includes('vijaysales.com') == true ){
+                finalString ='VS' + url.split('/')[url.length-1]
+            }
+            else if(url.includes('1mg.com') == true){
+                url = url.substring(url.lastIndexOf("/") + 1, url.length);
+                url = url.split('.',1)[0].split('-');
+                finalString ='1M' + url.slice(-1)[0]
             }
             else if(url.includes('netmeds.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
-                finalString = url.split('.',1)[0];
+                finalString ='NT' + url.split('/')[url.length-1]
             }
             else if(url.includes('nykaa.com') == true){
-                url = url.substring(url.lastIndexOf("/") + 1, url.length);
-                url = url.split('.',1)[0];
-                finalString = url.split('.',1)[0].split('?')[0];
+                
+                finalString ='NY' + url.split('/')[url.length-1].split('?',1)[0]
             }
             else if(url.includes('snapdeal.com') == true){
-                url = url.substring(url.lastIndexOf("/") + 1, url.length);
-                url = url.split('.',1)[0].split('#');
-                finalString = url[0]
+                finalString ='SD' + url.split('/')[url.length-1].split('#')[0]
             }
             else if(url.includes('myntra.com') == true){
-                finalString = url.split('/')[6]
+                finalString ='MY' + url.split('/')[url.length-2]
             }
             else if(url.includes('bigbasket.com') == true){
-                finalString = url.split('/')[4]
+                finalString ='BB' + url.split('/')[4]
             }
             else if(url.includes('paytmmall.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
                 url = url.split('?');
                 url = url[0].split('-')
-                finalString = url.slice(-2, -1)[0];
+                finalString ='PM' + url.slice(-2, -1)[0];
             }
-            else if(url.includes('croma.com') == true || url.includes('reliancedigital.in') == true || url.includes('ajio.com') == true || url.includes('jiomart.com') == true){
-                finalString = url.substring(url.lastIndexOf("/") + 1, url.length);
+            else if(url.includes('croma.com') == true ){
+                finalString ='CR' + url.split('/')[url.length-1];
+            }
+            else if(url.includes('reliancedigital.in') == true){
+                finalString ='RD' + url.substring(url.lastIndexOf("/") + 1, url.length);
+            }
+            else if(url.includes('ajio.com') == true ){
+                finalString ='AJ' + url.substring(url.lastIndexOf("/") + 1, url.length);
+            }
+            else if(url.includes('jiomart.com') == true){
+                finalString ='JM' + url.substring(url.lastIndexOf("/") + 1, url.length);
             }
             else if(url.includes('zivame.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
-                finalString = url.split('?')[0].split('.',1)[0];
+                finalString ='ZV' + url.split('?')[0].split('.',1)[0];
             }
             else if(url.includes('tatacliq.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
                 url = url.split('-')
-                finalString = url[1]
+                finalString ='TQ' + url[1]
             }
             else if(url.includes('firstcry.com') == true){
-                url = url.split('/')
-                finalString = url.slice(-2, -1)[0]
+                finalString ='FC' + url.split('/')[url.length-2]
             }
             else{
                 finalString = /[^\\\/:*?"<>|\r\n]+$/i.exec(singleRec.Product_Url)[0]

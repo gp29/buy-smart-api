@@ -191,6 +191,7 @@ const getCacheResults = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             let arr = [];
+            let adArr = [];
             let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
             if(!response){
                 reject(errors.userNotFound(true, code));
@@ -199,9 +200,24 @@ const getCacheResults = async(requestParam, code) => {
             let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
             let res = await client2.get(key);
             if(res){
+                let skip = 0;
+                let limit = 10
+                let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_key: key}, { _id: 0, category_id:1} );
+                adArr = await query.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: {$in: [product.category_id]}}, {
+                    _id: 0,
+                    created_at: 0,
+                    updated_at: 0,
+                    __v: 0,
+                }, {Query_count: -1, created_at:-1}, {
+                    skip,
+                    limit
+                });
                 arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: res}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
             }
-            resolve(arr)
+            resolve({
+                data: arr,
+                ad: adArr
+            })
             return
         } catch (error) {
             console.log(error);
@@ -231,7 +247,7 @@ const feed = async(requestParam, code) => {
                 created_at: 0,
                 updated_at: 0,
                 __v: 0,
-            }, {Query_count: -1}, {
+            }, {Query_count: -1, created_at:-1}, {
                 skip,
                 limit
             });

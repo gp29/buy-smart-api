@@ -14,5 +14,7 @@ module.exports = {
         results: 'Result',
         feeds: 'Feed',
         lotties: 'Lottie',
+        report_categories: 'Report_category',
+        reports: 'Report',
     }
 };

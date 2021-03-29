@@ -26,11 +26,13 @@ const banner = require('./routes/backend/banner');
 const feed = require('./routes/backend/feed');
 const lottie = require('./routes/backend/lottie');
 const version = require('./routes/backend/version');
+const report = require('./routes/backend/report');
 
 // FOR API
 const authAPI = require('./routes/api/auth');
 const productAPI = require('./routes/api/product');
 const bannerAPI = require('./routes/api/banner');
+const reportAPI = require('./routes/api/report');
 
 //other configurations
 const passport = require('passport');
@@ -65,11 +67,13 @@ app.use('/backend/banner', banner);
 app.use('/backend/feed', feed);
 app.use('/backend/lottie', lottie);
 app.use('/backend/version', version);
+app.use('/backend/report', report);
 
 // FOR API
 app.use('/api/auth', authAPI);
 app.use('/api/product', productAPI);
 app.use('/api/banner', bannerAPI);
+app.use('/api/report', reportAPI);
 
 app.use(upload());
 

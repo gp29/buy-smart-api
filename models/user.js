@@ -24,6 +24,14 @@ var userSchema = new Schema({
         type: String,
         default: ''
     },
+    mobile_country_code: {
+        type: String,
+        default: ''
+    },
+    mobile: {
+        type: String,
+        default: ''
+    },
     profile_picture: {
         type: String,
         default: ''

@@ -8,34 +8,19 @@ const query = require('./../../utils/query-creator-api');
 let async = require('async');
 const User = require('./../../models/user');
 
-// var firebase = require('firebase');
-// firebase.initializeApp({
-//     apiKey: "AIzaSyCql1zAlFz07DhBXjj-LRu332xeaHRydoE",
-//     authDomain: "buysmartly-28aeb.firebaseapp.com",
-//     databaseURL: "https://buysmartly-28aeb.firebaseio.com",
-//     projectId: "buysmartly-28aeb",
-//     storageBucket: "buysmartly-28aeb.appspot.com",
-//     appId: "1:888452528083:android:2117432892cc1cbd1c6126"
-// });
-
-// firebase.auth().signInWithPhoneNumber('+917041077741')
-// .then((confirmationResult) => {
-//   console.log(confirmationResult)
-// }).catch((error) => {
-//  console.log(error)
-// });
-
-/*const confirmation = await firebase.auth().signInWithPhoneNumber('+91 7041077741');
-console.log(confirmation)*/
-
 const signin = async(requestParam) => {
     return new Promise(async(resolve, reject) => {
         try {
             let response = await query.countRecord(dbConstants.dbSchema.users, { social_id: requestParam.social_id});
+            let insert = false;
             if(response == 0){
+                insert = true;
                 await query.insertSingle(dbConstants.dbSchema.users, requestParam);
             }
-            resolve(profile({ social_id: requestParam.social_id }, requestParam.code));
+            else{
+                await query.updateSingle(dbConstants.dbSchema.users, requestParam, { social_id: requestParam.social_id});
+            }
+            resolve(profile({ social_id: requestParam.social_id }, requestParam.code, insert));
             return;
         } catch (error) {
             console.log(error)
@@ -46,13 +31,20 @@ const signin = async(requestParam) => {
 };
 
 
-const profile = async(columnAndValues, code) => {
+const profile = async(columnAndValues, code, insert) => {
     return new Promise(async(resolve, reject) => {
         try {
             let response = await query.selectWithAndOne(dbConstants.dbSchema.users, columnAndValues, { _id: 0, created_at:0, updated_at:0, __v:0} );
             if(!response){
                 reject(errors.userNotFound(true, code));
                 return;
+            }
+            response = JSON.parse(JSON.stringify(response))
+            if(insert){
+                response.is_mobile_exists = false;
+            }
+            else{
+                response.is_mobile_exists = true;
             }
             resolve(response)
             return

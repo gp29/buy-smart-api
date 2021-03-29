@@ -53,6 +53,14 @@
                                     "social_id": {
                                         "type": "string",
                                         "description": "Pass only while using social"
+                                    },
+                                    "mobile_country_code": {
+                                        "type": "string",
+                                        "description": "Optional"
+                                    },
+                                    "mobile": {
+                                        "type": "string",
+                                        "description": "Optional"
                                     }
                                 }
                             }
@@ -429,6 +437,77 @@
                 },
                 "parameters": [],
                 "operationId": "BannerController.List"
+            }
+        },
+
+        "/report/category-list": {
+            "get": {
+                "x-controller-name": "ReportController",
+                "x-operation-name": "CategoryList",
+                "tags": ["ReportController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "CategoryList",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [],
+                "operationId": "ReportController.CategoryList"
+            }
+        },
+        "/report/user-send-report": {
+            "post": {
+                "x-controller-name": "ReportController",
+                "x-operation-name": "UserSendReport",
+                "tags": ["ReportController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "UserSendReport",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "type": "string"
+                                    },
+                                    "report_category_id": {
+                                        "type": "string",
+                                        "description": "Pass  Multiple comma seperate like 1,2,3"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "ReportController.UserSendReport"
             }
         }
     },

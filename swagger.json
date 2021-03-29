@@ -61,6 +61,10 @@
                                     "mobile": {
                                         "type": "string",
                                         "description": "Optional"
+                                    },
+                                    "device_token": {
+                                        "type": "string",
+                                        "description": "Optional"
                                     }
                                 }
                             }

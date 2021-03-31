@@ -106,7 +106,8 @@ const getImageKeyExtract = async (url) => {
                 finalString = url.split('/')[5]
             }
             else if(url.includes('paytm.com') == true){
-                finalString = url.split('/')[8].split('.')[0]
+                url = url.substring(url.lastIndexOf("/") + 1, url.length);
+               finalString = url.split('_',1)[0];
             }
             else if(url.includes('sdlcdn.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
@@ -182,6 +183,11 @@ const getProductKeyExtract = async (url) => {
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
                 url = url.split('.',1)[0];
                 finalString = "NY" + url.split('.',1)[0].split('?')[0];
+            }
+            else if(url.includes('nykaaman.com') == true){
+                url = url.substring(url.lastIndexOf("/") + 1, url.length);
+                url = url.split('.',1)[0];
+                finalString = "NYM" + url.split('.',1)[0].split('?')[0];
             }
             else if(url.includes('snapdeal.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);

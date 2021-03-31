@@ -16,5 +16,8 @@ module.exports = {
         lotties: 'Lottie',
         report_categories: 'Report_category',
         reports: 'Report',
+        settings: 'Setting',
+        scraps: 'Scrap',
+        ads: 'Ad',
     }
 };

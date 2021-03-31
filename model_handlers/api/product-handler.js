@@ -200,10 +200,19 @@ const getCacheResults = async(requestParam, code) => {
             let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
             let res = await client2.get(key);
             if(res){
+                let settings = await query.selectWithAndOne(dbConstants.dbSchema.settings, {}, { _id: 0} );
+                let ads = await query.selectWithAndFilter(dbConstants.dbSchema.ads, {}, {
+                    _id: 0,
+                    Index:1
+                }, {created_at:-1}, {});
+                let displayProducts = await query.selectWithAndOne(dbConstants.dbSchema.products, {Index: {$in: _.pluck(ads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+                
+                let remain = settings.display_ad - displayProducts.length
+                
                 let skip = 0;
-                let limit = 10
+                let limit = remain
                 let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_key: key}, { _id: 0, category_id:1} );
-                adArr = await query.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: {$in: [product.category_id]}}, {
+                let cateArr = await query.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: {$in: [product.category_id]}}, {
                     _id: 0,
                     created_at: 0,
                     updated_at: 0,
@@ -212,6 +221,8 @@ const getCacheResults = async(requestParam, code) => {
                     skip,
                     limit
                 });
+                displayProducts.push(cateArr)
+                adArr = _.flatten(displayProducts);
                 arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: res}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
             }
             resolve({
@@ -240,8 +251,9 @@ const feed = async(requestParam, code) => {
             let feeds = await query.selectWithAnd(dbConstants.dbSchema.feeds, {}, { _id: 0, Index:1} );
             arr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(feeds, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
 
-            let skip = 0;
-            let limit = 100
+            let limit = 15;
+            let page = parseFloat(requestParam.page) - 1;
+            let skip = page * limit;
             let data = await query.selectWithAndFilter(dbConstants.dbSchema.products, {Index: {$nin: _.pluck(feeds, 'Index')}}, {
                 _id: 0,
                 created_at: 0,

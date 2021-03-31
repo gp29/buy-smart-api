@@ -148,7 +148,7 @@ router.get('/get-cache-results', async(req, res) => {
 router.get('/feed', async(req, res) => {
     req.query.code = 'EN';
     try {
-        if (req.query.user_id) {
+        if (req.query.user_id || req.query.page) {
             let response = await productHandler.feed(req.query, req.query.code);
             jsonResponse(res, responseCodes.OK, errors.noError(), response);
         } else {

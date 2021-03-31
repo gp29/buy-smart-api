@@ -133,6 +133,12 @@
                     "schema": {
                         "type": "string"
                     }
+                }, {
+                    "name": "page",
+                    "in": "query",
+                    "schema": {
+                        "type": "number"
+                    }
                 }],
                 "operationId": "ProductController.Feed"
             }
@@ -512,6 +518,71 @@
                     }
                 },
                 "operationId": "ReportController.UserSendReport"
+            }
+        },
+
+        "/scrap/get-background-scrap-list": {
+            "get": {
+                "x-controller-name": "ScrapController",
+                "x-operation-name": "List",
+                "tags": ["ScrapController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [],
+                "operationId": "ScrapController.List"
+            }
+        },
+        "/scrap/insert-background-scrap-url": {
+            "post": {
+                "x-controller-name": "ScrapController",
+                "x-operation-name": "InsertUrl",
+                "tags": ["ScrapController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "InsertUrl",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "description": "Pass  Multiple comma seperate like 1,2,3"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "ScrapController.InsertUrl"
             }
         }
     },

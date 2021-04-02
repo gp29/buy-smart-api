@@ -152,8 +152,7 @@ const getProductKeyExtract = async (url) => {
             }
             else if(url.includes('shopclues.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
-                url = url.split('.',1)[0].split('-');
-                finalString = "SC" + url.slice(-1)[0]
+                finalString = 'SC' + url.split('.',1)[0];
             }
             else if(url.includes('1mg.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);

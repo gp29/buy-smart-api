@@ -205,7 +205,7 @@ const getCacheResults = async(requestParam, code) => {
                     _id: 0,
                     Index:1
                 }, {created_at:-1}, {});
-                let displayProducts = await query.selectWithAndOne(dbConstants.dbSchema.products, {Index: {$in: _.pluck(ads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+                let displayProducts = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(ads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
                 
                 let remain = settings.display_ad - displayProducts.length
                 

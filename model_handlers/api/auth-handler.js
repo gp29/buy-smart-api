@@ -12,15 +12,13 @@ const signin = async(requestParam) => {
     return new Promise(async(resolve, reject) => {
         try {
             let response = await query.countRecord(dbConstants.dbSchema.users, { social_id: requestParam.social_id});
-            let insert = false;
             if(response == 0){
-                insert = true;
                 await query.insertSingle(dbConstants.dbSchema.users, requestParam);
             }
             else{
                 await query.updateSingle(dbConstants.dbSchema.users, requestParam, { social_id: requestParam.social_id});
             }
-            resolve(profile({ social_id: requestParam.social_id }, requestParam.code, insert));
+            resolve(profile({ social_id: requestParam.social_id }, requestParam.code));
             return;
         } catch (error) {
             console.log(error)
@@ -31,7 +29,7 @@ const signin = async(requestParam) => {
 };
 
 
-const profile = async(columnAndValues, code, insert) => {
+const profile = async(columnAndValues, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             let response = await query.selectWithAndOne(dbConstants.dbSchema.users, columnAndValues, { _id: 0, created_at:0, updated_at:0, __v:0} );
@@ -40,11 +38,11 @@ const profile = async(columnAndValues, code, insert) => {
                 return;
             }
             response = JSON.parse(JSON.stringify(response))
-            if(insert){
-                response.is_mobile_exists = false;
+            if(response.mobile_country_code !=='' && response.mobile !==''){
+                response.is_mobile_exists = true;
             }
             else{
-                response.is_mobile_exists = true;
+                response.is_mobile_exists = false;
             }
             resolve(response)
             return

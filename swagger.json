@@ -218,6 +218,43 @@
                 "operationId": "ProductController.CacheResults"
             }
         },
+        "/product/get-ads": {
+            "get": {
+                "x-controller-name": "ProductController",
+                "x-operation-name": "AdsResult",
+                "tags": ["ProductController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "AdsResult",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }, {
+                    "name": "Product_Url",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "operationId": "ProductController.AdsResult"
+            }
+        },
         "/product/get-image-key": {
             "get": {
                 "x-controller-name": "ProductController",

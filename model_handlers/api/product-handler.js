@@ -191,6 +191,29 @@ const getCacheResults = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             let arr = [];
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
+            if(!response){
+                reject(errors.userNotFound(true, code));
+                return;
+            }
+            let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
+            let res = await client2.get(key);
+            if(res){
+                arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: res}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+            }
+            resolve(arr)
+            return
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
+
+const getAds = async(requestParam, code) => {
+    return new Promise(async(resolve, reject) => {
+        try {
             let adArr = [];
             let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
             if(!response){
@@ -223,12 +246,8 @@ const getCacheResults = async(requestParam, code) => {
                 });
                 displayProducts.push(cateArr)
                 adArr = _.flatten(displayProducts);
-                arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: res}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
             }
-            resolve({
-                data: arr,
-                ad: adArr
-            })
+            resolve(adArr)
             return
         } catch (error) {
             console.log(error);
@@ -284,5 +303,6 @@ module.exports = {
     dataInsertPost,
     getCacheResults,
     feed,
-    dataInsertAndroid
+    dataInsertAndroid,
+    getAds
 };

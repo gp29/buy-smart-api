@@ -28,6 +28,39 @@ const signin = async(requestParam) => {
     })
 };
 
+const updateDeviceToken = async(requestParam) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+            if(!response){
+                reject(errors.userNotFound(true, code));
+                return;
+            }
+            await query.updateSingle(dbConstants.dbSchema.users, requestParam, { user_id: requestParam.user_id});
+            resolve({});
+            return;
+        } catch (error) {
+            console.log(error)
+            reject(error)
+            return
+        }
+    })
+};
+
+const logout = async(requestParam) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            await query.updateSingle(dbConstants.dbSchema.users, {user_login_type: 'logout'}, { user_id: requestParam.user_id});
+            resolve({});
+            return;
+        } catch (error) {
+            console.log(error)
+            reject(error)
+            return
+        }
+    })
+};
+
 
 const profile = async(columnAndValues, code) => {
     return new Promise(async(resolve, reject) => {
@@ -87,5 +120,7 @@ const getLottieAnimation = async(requestParam) => {
 module.exports = {
     signin,
     profile,
-    getLottieAnimation
+    getLottieAnimation,
+    updateDeviceToken,
+    logout
 };

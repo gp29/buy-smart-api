@@ -74,6 +74,85 @@
                 "operationId": "AuthController.Signin"
             }
         },
+        "/auth/update-device-token": {
+            "post": {
+                "x-controller-name": "AuthController",
+                "x-operation-name": "UpdateDeviceToken",
+                "tags": ["AuthController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "UpdateDeviceToken",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "type": "string"
+                                    },
+                                    "device_token": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "AuthController.UpdateDeviceToken"
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "x-controller-name": "AuthController",
+                "x-operation-name": "logout",
+                "tags": ["AuthController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "AuthController.logout"
+            }
+        },
         "/auth/get-lottie-animation": {
             "get": {
                 "x-controller-name": "AuthController",
@@ -540,6 +619,9 @@
                                 "type": "object",
                                 "properties": {
                                     "user_id": {
+                                        "type": "string"
+                                    },
+                                    "result_id": {
                                         "type": "string"
                                     },
                                     "report_category_id": {

@@ -29,8 +29,29 @@ router.post('/forgot', function (req, res) {
 	});
 });
 
+
+router.get('/get-users', function (req, res) {
+	authHandler.getUsers(req.query,function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
 router.post('/reset', function (req, res) {
 	authHandler.reset(req.body,function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
+router.post('/send-notification', function (req, res) {
+	authHandler.sendNotification(req.body,function (error, response) {
 		if (error) {
 			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
 			return;

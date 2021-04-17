@@ -40,6 +40,10 @@ var userSchema = new Schema({
         type: String,
         default: ''
     },
+    user_login_type: {
+        type: String,
+        default: 'login'
+    },
     status: {
         type: String,
         enum: ['active', 'inactive'],

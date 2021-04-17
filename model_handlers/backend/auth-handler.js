@@ -10,6 +10,7 @@ let _ = require('underscore');
 const config = require('./../../config');
 const passwordHandler = require('./../../utils/password');
 const Admin = require('./../../models/admin');
+var FCM = require('fcm-push');
 
 const login = function(requestParam, done){
 	query.selectWithAndOne(dbConstants.dbSchema.admins, {email: requestParam.email}, {
@@ -102,8 +103,61 @@ const reset = async function(requestParam, done) {
     }); 
 };
 
+const getUsers = async function(requestParam, done) {
+    query.selectWithAnd(dbConstants.dbSchema.users, requestParam, {
+        user_id: 1,
+        name: 1,
+        mobile_country_code: 1,
+        mobile: 1,
+        _id: 0
+    }, function(error, user) {
+        if (error) {
+            done(errors.internalServer(true));
+            return;
+        }
+        done(null, user)
+    });
+};
+
+const sendNotification = async function(requestParam, done) {
+    requestParam.user_id = _.pluck(requestParam.user_id, 'id')
+    query.selectWithAnd(dbConstants.dbSchema.users, {user_id:{$in: requestParam.user_id}}, {
+        user_id: 1,
+        device_token:1,
+        _id: 0
+    }, function(error, users) {
+        if (error) {
+            done(errors.internalServer(true));
+            return;
+        }
+        var fcm = new FCM(config.push_server_key);
+        var message = {
+            to: _.pluck(users, 'device_token'),
+            collapse_key: 'your_collapse_key',
+            priority: "high",
+            data: {
+                tag: 'promotion',
+                type: 'promotion',
+                title: 'Buy Smart',
+            },
+            notification: {
+                title: 'Buy Smart',
+                body: requestParam.description,
+                sound: 'default'
+            }
+        };
+        fcm.send(message, function(err, response) {
+            console.log(err);
+            console.log(response);
+        });
+        done(null, {})
+    });
+};
+
 module.exports = {
 	login,
     forgot,
-    reset
+    reset,
+    getUsers,
+    sendNotification
 };

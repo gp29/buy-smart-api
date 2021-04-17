@@ -11,6 +11,10 @@ var reportSchema = new Schema({
         type: String,
         default: ''
     },
+    result_id: {
+        type: String,
+        default: ''
+    },
     report_category_id: {
         type: Array,
         default: []

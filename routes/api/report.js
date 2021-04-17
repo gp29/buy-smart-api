@@ -26,7 +26,7 @@ router.get('/category-list', async(req, res) => {
 router.post('/user-send-report', async(req, res) => {
     req.body.code = 'EN';
     try {
-        if (req.body.user_id && req.body.report_category_id && req.body.message) {
+        if (req.body.user_id && req.body.report_category_id && req.body.message && req.body.result_id) {
             let response = await reportHandler.sendReport(req.body);
             jsonResponse(res, responseCodes.OK, errors.noError(), response);
         } else {

@@ -181,15 +181,13 @@ const dataInsert = async(singleRec, code) => {
                 if(singleRec.Rating_Star && (singleRec.Rating_Star!='' || singleRec.Rating_Star!='null' || singleRec.Rating_Star!='NULL')){
                     updateObj.Rating_Star = singleRec.Rating_Star
                 }
-                if(singleRec.Time_stamp){
-                    updateObj.Time_stamp = new Date()
-                }
                 if(singleRec.SS_update){
                     updateObj['$inc'] = { SS_update: 1 }
                 }
                 if(singleRec.CS_update){
                     updateObj['$inc'] = { CS_update: 1 }
                 }
+                updateObj.Time_stamp = new Date()
                 await query.updateSingle(dbConstants.dbSchema.products, updateObj, { Index: parseFloat(res) });
                 await query.updateMultiple(dbConstants.dbSchema.results, updateObj, { Index: parseFloat(res) });
                 resolve({});

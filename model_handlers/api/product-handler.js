@@ -44,6 +44,7 @@ const getResults = async(requestParam, code) => {
             }, async function(){
                 let products = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: indexArr}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
                 await query.updateMultiple(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
+                await query.updateMultiple(dbConstants.dbSchema.results, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
                 insertResultData(products);
                 resolve(products)
                 return
@@ -133,8 +134,6 @@ const dataInsert = async(singleRec, code) => {
                 return;
             }
             else{
-                console.log("singleRec")
-                console.log(singleRec)
                 let updateObj = {};
                 if(singleRec.category_id && (singleRec.category_id!='' || singleRec.category_id!='null' || singleRec.category_id!='NULL')){
                     updateObj.category_id = singleRec.category_id
@@ -251,6 +250,8 @@ const getCacheResults = async(requestParam, code) => {
             let res = await client2.get(key);
             if(res){
                 arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: res}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+                let indexArr = _.pluck(arr, 'Index')
+                await query.updateMultiple(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
             }
             resolve(arr)
             return

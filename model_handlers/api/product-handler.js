@@ -160,15 +160,15 @@ const dataInsert = async(singleRec, code) => {
                 if(singleRec.Img_url && (singleRec.Img_url!='' || singleRec.Img_url!='null' || singleRec.Img_url!='NULL')){
                     updateObj.Img_url = singleRec.Img_url
                 }
-                if(singleRec.Mrp && (singleRec.Mrp!='' || singleRec.Mrp!='null' || singleRec.Mrp!='NULL')){
-                    updateObj.Mrp = singleRec.Mrp
-                }
-                if(singleRec.SellPrice && (singleRec.SellPrice!='' || singleRec.SellPrice!='null' || singleRec.SellPrice!='NULL')){
-                    updateObj.SellPrice = singleRec.SellPrice
-                }
-                if(singleRec.Discount && (singleRec.Discount!='' || singleRec.Discount!='null' || singleRec.Discount!='NULL')){
-                    updateObj.Discount = singleRec.Discount
-                }
+                updateObj.Mrp = singleRec.Mrp;
+                /*if(singleRec.Mrp && (singleRec.Mrp!='' || singleRec.Mrp!='null' || singleRec.Mrp!='NULL')){
+                }*/
+                updateObj.SellPrice = singleRec.SellPrice;
+                /*if(singleRec.SellPrice && (singleRec.SellPrice!='' || singleRec.SellPrice!='null' || singleRec.SellPrice!='NULL')){
+                }*/
+                updateObj.Discount = singleRec.Discount;
+                /*if(singleRec.Discount && (singleRec.Discount!='' || singleRec.Discount!='null' || singleRec.Discount!='NULL')){
+                }*/
                 if(singleRec.Colour && (singleRec.Colour!='' || singleRec.Colour!='null' || singleRec.Colour!='NULL')){
                     updateObj.Colour = singleRec.Colour
                 }

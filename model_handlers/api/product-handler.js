@@ -133,6 +133,8 @@ const dataInsert = async(singleRec, code) => {
                 return;
             }
             else{
+                console.log("singleRec")
+                console.log(singleRec)
                 let updateObj = {};
                 if(singleRec.category_id && (singleRec.category_id!='' || singleRec.category_id!='null' || singleRec.category_id!='NULL')){
                     updateObj.category_id = singleRec.category_id

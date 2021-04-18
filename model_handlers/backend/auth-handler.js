@@ -10,7 +10,7 @@ let _ = require('underscore');
 const config = require('./../../config');
 const passwordHandler = require('./../../utils/password');
 const Admin = require('./../../models/admin');
-var FCM = require('fcm-push');
+const FCM = require('fcm-node');
 
 const login = function(requestParam, done){
 	query.selectWithAndOne(dbConstants.dbSchema.admins, {email: requestParam.email}, {
@@ -130,26 +130,22 @@ const sendNotification = async function(requestParam, done) {
             done(errors.internalServer(true));
             return;
         }
-        var fcm = new FCM(config.push_server_key);
-        var message = {
-            to: _.pluck(users, 'device_token'),
-            collapse_key: 'your_collapse_key',
-            priority: "high",
-            data: {
-                tag: 'promotion',
-                type: 'promotion',
-                title: 'Buy Smart',
-            },
+        const fcm = new FCM(config.push_server_key);
+        const message = {
+            registration_ids: _.pluck(users, 'device_token'),
+            collapse_key: 'green',
             notification: {
                 title: 'Buy Smart',
                 body: requestParam.description,
-                sound: 'default'
+                type: 'promotion',
+                push_type: 'promotion',
             }
         };
-        fcm.send(message, function(err, response) {
-            console.log(err);
+        console.log(message);
+        fcm.send(message, function(error, response) {
+            console.log(error);
             console.log(response);
-        });
+        }) 
         done(null, {})
     });
 };

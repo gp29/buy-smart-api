@@ -8,6 +8,7 @@ const express = require('express');
 const router = express.Router();
 const _ = require('underscore');
 const productHandler = require('./../../model_handlers/backend/product-handler');
+const feedHandler = require('./../../model_handlers/backend/feed-handler');
 
 router.post('/get',function (req, res) {
 	productHandler.get(req.body, function (error, response) {
@@ -31,6 +32,16 @@ router.post('/import',function (req, res) {
 
 router.post('/action',function (req, res) {
 	productHandler.action(req.body, function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
+router.post('/create',function (req, res) {
+	feedHandler.createProduct(req.body, function (error, response) {
 		if (error) {
 			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
 			return;

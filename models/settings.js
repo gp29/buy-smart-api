@@ -14,7 +14,11 @@ var settingSchema = new Schema({
     display_background_scrap: {
         type: Number,
         default: 0
-    }
+    },
+    product_feed: {
+        type: Number,
+        default: 0
+    },
 });
 
 

@@ -11,6 +11,10 @@ var bannerSchema = new Schema({
         type: String,
         default: ''
     },
+    url: {
+        type: String,
+        default: ''
+    },
     created_at: {
         type: Date,
         default: Date.now

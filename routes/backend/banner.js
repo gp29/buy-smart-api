@@ -10,7 +10,8 @@ const _ = require('underscore');
 const bannerHandler = require('./../../model_handlers/backend/banner-handler');
 
 router.post('/upload', function (req, res) {
-	bannerHandler.upload(req, function (error, response) {
+	let requestParam = JSON.parse(req.body.fields);
+	bannerHandler.upload(requestParam, req, function (error, response) {
 		if (error) {
 			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
 			return;

@@ -17,8 +17,6 @@ const get = function(req,done){
     let fullUrl = req.protocol + '://' + req.get('host');
     query.selectWithAndFilter(dbConstants.dbSchema.banners, {}, {
         _id: 0,
-        image:1,
-        banner_id:1
     }, {created_at:-1}, {}, (error, response) => {
         if(error){
             done(errors.internalServer(true));
@@ -32,13 +30,14 @@ const get = function(req,done){
     });
 };
 
-const upload = function(req,done){
+const upload = function(requestParam, req,done){
     mv(req.files.banner.path, './public/banner/'+req.files.banner.name, function(err) {
         if(err){
             done(errors.internalServer(true));
             return;
         }
-        query.insertSingle(dbConstants.dbSchema.banners, {image: req.files.banner.name}, function (error, banner) {
+        console.log(requestParam)
+        query.insertSingle(dbConstants.dbSchema.banners, {image: req.files.banner.name, url: requestParam.url}, function (error, banner) {
             done(null, {})
         });
     });

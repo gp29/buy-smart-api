@@ -335,5 +335,5 @@ module.exports = {
     importFile,
     action,
     getImageKeyExtract,
-    getProductKeyExtract
+    getProductKeyExtract,
 };

@@ -121,7 +121,6 @@ const getProductKey = async(requestParam, code) => {
 const dataInsert = async(singleRec, code) => {
     return new Promise(async(resolve, reject) => {
         try {
-            
             delete singleRec.Index;
             singleRec.Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url)
 
@@ -325,6 +324,8 @@ const getAds = async(requestParam, code) => {
 const feed = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
+            let settings = await query.selectWithAndOne(dbConstants.dbSchema.settings, {}, { _id: 0} );
+
             let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
             if(!response){
                 reject(errors.userNotFound(true, code));
@@ -335,7 +336,7 @@ const feed = async(requestParam, code) => {
             let feeds = await query.selectWithAnd(dbConstants.dbSchema.feeds, {}, { _id: 0, Index:1} );
             arr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(feeds, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
 
-            let limit = 20;
+            let limit = settings.product_feed ? settings.product_feed : 15;
             let page = parseFloat(requestParam.page) - 1;
             let skip = page * limit;
             let data = await query.selectWithAndFilter(dbConstants.dbSchema.products, {Index: {$nin: _.pluck(feeds, 'Index')}}, {

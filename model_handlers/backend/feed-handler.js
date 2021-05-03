@@ -10,6 +10,7 @@ let async = require('async');
 let _ = require('underscore');
 const feed = require('./../../models/feed');
 const productHandler = require('./../../model_handlers/backend/product-handler');
+const productAPIHandler = require('./../../model_handlers/api/product-handler');
 
 const redis = require("redis");
 
@@ -77,10 +78,24 @@ const action  = (requestParam, done) => {
     }
 };
 
+const createProduct = (requestParam,done) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let res = await productAPIHandler.dataInsert(requestParam);
+            done(null, {});
+            return;
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
 
 
 module.exports = {
 	add,
     get,
-    action
+    action,
+    createProduct
 };

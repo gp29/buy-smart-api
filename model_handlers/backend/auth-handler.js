@@ -140,6 +140,12 @@ const sendNotification = async function(requestParam, done) {
                 type: 'promotion',
                 push_type: 'promotion',
             }
+            data: {
+                title: 'Buy Smart',
+                body: requestParam.description,
+                type: 'promotion',
+                push_type: 'promotion',
+            }
         };
         console.log(message);
         fcm.send(message, function(error, response) {

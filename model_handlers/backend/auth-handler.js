@@ -139,7 +139,7 @@ const sendNotification = async function(requestParam, done) {
                 body: requestParam.description,
                 type: 'promotion',
                 push_type: 'promotion',
-            }
+            },
             data: {
                 title: 'Buy Smart',
                 body: requestParam.description,

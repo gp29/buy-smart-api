@@ -262,9 +262,12 @@ const getCacheResults = async(requestParam, code) => {
 };
 
 const updateQueryCount = async(arr) => {
+    console.log("updateQueryCount")
+    console.log(arr)
     return new Promise(async(resolve, reject) => {
         try {
             let indexArr = _.pluck(arr, 'Index')
+            console.log(indexArr)
             await query.updateMultiple(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
             await query.updateMultiple(dbConstants.dbSchema.results, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
             return false;

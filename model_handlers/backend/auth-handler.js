@@ -10,6 +10,8 @@ let _ = require('underscore');
 const config = require('./../../config');
 const passwordHandler = require('./../../utils/password');
 const Admin = require('./../../models/admin');
+const contact_us = require('./../../models/contact-us');
+const about_us = require('./../../models/about-us');
 const FCM = require('fcm-node');
 
 const login = function(requestParam, done){

@@ -91,4 +91,47 @@ router.get('/get-lottie-animation', async(req, res) => {
     }
 });
 
+router.post('/contact-us', async(req, res) => {
+    req.body.code = 'EN';
+    try {
+        if (req.body.user_id && req.body.message) {
+            let response = await authHandler.contactus(req.body);
+            jsonResponse(res, responseCodes.OK, errors.noError(), response);
+        } else {
+            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.body.code), null);
+            return;
+        }
+    } catch (error) {
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.body.code), null);
+            return;
+        }
+    }
+});
+
+router.get('/get-about-us-content', async(req, res) => {
+    req.query.code = 'EN';
+    try {
+        if (req.query.user_id) {
+            let response = await authHandler.aboutus(req, req.query);
+            jsonResponse(res, responseCodes.OK, errors.noError(), response);
+        } else {
+            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
+            return;
+        }
+    } catch (error) {
+        console.log(error)
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.query.code), null);
+            return;
+        }
+    }
+});
+
 module.exports = router;

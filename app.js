@@ -29,6 +29,7 @@ const version = require('./routes/backend/version');
 const report = require('./routes/backend/report');
 const settings = require('./routes/backend/settings');
 const ad = require('./routes/backend/ad');
+const about = require('./routes/backend/about');
 
 // FOR API
 const authAPI = require('./routes/api/auth');
@@ -73,6 +74,7 @@ app.use('/backend/version', version);
 app.use('/backend/report', report);
 app.use('/backend/settings', settings);
 app.use('/backend/ad', ad);
+app.use('/backend/about', about);
 
 // FOR API
 app.use('/api/auth', authAPI);

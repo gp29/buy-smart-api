@@ -2,24 +2,24 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const idGenerator = require('./../utils/id-generator');
 
-var adSchema = new Schema({
-    ad_id: {
+var contactUsSchema = new Schema({
+    contact_id: {
         type: String,
         default: ''
     },
-    category_id: {
+    user_id: {
         type: String,
         default: ''
     },
-    Index: {
-        type: Number,
-        default: 0
-    },
-    Product_key: {
+    email: {
         type: String,
         default: ''
     },
-    Product_Url: {
+    mobile: {
+        type: String,
+        default: ''
+    },
+    message: {
         type: String,
         default: ''
     },
@@ -33,14 +33,15 @@ var adSchema = new Schema({
     }
 });
 
+
+
 // // Execute before each user.save() call
-adSchema.pre('save', function(callback) {
-    idGenerator.generateId('ads', 'ad_id', 'AD', (err, ID) => {
-        this.ad_id = ID;
+contactUsSchema.pre('save', function(callback) {
+    idGenerator.generateId('contact_us', 'contact_id', 'CON', (err, ID) => {
+        this.contact_id = ID;
         callback();
     });
 });
 
-
-var Ad = mongoose.model('Ad', adSchema);
-module.exports = Ad;
+var Contact_us = mongoose.model('Contact_us', contactUsSchema);
+module.exports = Contact_us;

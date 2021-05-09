@@ -19,5 +19,7 @@ module.exports = {
         settings: 'Setting',
         scraps: 'Scrap',
         ads: 'Ad',
+        contact_us: 'Contact_us',
+        about_us: 'About_us',
     }
 };

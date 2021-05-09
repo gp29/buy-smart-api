@@ -29,10 +29,10 @@ const add = function(requestParam,done){
     requestParam.Product_Url = requestParam.Product_Url.split('|');
     async.forEachSeries(requestParam.Product_Url, async function(singleRec, callbackSingleRec) {
         let Product_key = await productHandler.getProductKeyExtract(singleRec)
-        console.log(Product_key)
         query.selectWithAndFilterOne(dbConstants.dbSchema.products, {Product_key: Product_key}, {
             _id: 0,
             Product_key:1,
+            category_id:1,
             Index:1
         }, {created_at:-1}, {}, (error, response) => {
             if(error || !response){
@@ -43,6 +43,7 @@ const add = function(requestParam,done){
                     Index: response.Index,
                     Product_key: Product_key,
                     Product_Url: singleRec,
+                    category_id: response.category_id,
                 }
                 query.insertSingle(dbConstants.dbSchema.ads, obj, function(error, user) {
                     callbackSingleRec();

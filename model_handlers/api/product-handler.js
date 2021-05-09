@@ -11,6 +11,7 @@ let asyncLoop = require('async');
 const result = require('./../../models/result');
 const Product = require('./../../models/product');
 const productHandler = require('./../../model_handlers/backend/product-handler');
+const { forEach } = require('p-iteration');
 
 const redis = require("redis");
 const util = require('util');
@@ -43,8 +44,7 @@ const getResults = async(requestParam, code) => {
                 callbackSingleRec();
             }, async function(){
                 let products = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: indexArr}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
-                await query.updateMultiple(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
-                await query.updateMultiple(dbConstants.dbSchema.results, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
+                updateQueryCountGetResult(indexArr)
                 insertResultData(products);
                 resolve(products)
                 return
@@ -56,6 +56,21 @@ const getResults = async(requestParam, code) => {
         }
     })
 };
+
+const updateQueryCountGetResult = async(indexArr) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            await forEach(indexArr, async(element) => {
+                let res = await query.updateSingle(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: element });
+                await query.updateSingle(dbConstants.dbSchema.results, { $inc: { Query_count: 1 } }, { Index: element });
+            });
+            return false;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    })
+}
 
 const insertResultData = async(products) => {
     return new Promise(async(resolve, reject) => {
@@ -262,14 +277,13 @@ const getCacheResults = async(requestParam, code) => {
 };
 
 const updateQueryCount = async(arr) => {
-    console.log("updateQueryCount")
-    console.log(arr)
     return new Promise(async(resolve, reject) => {
         try {
-            let indexArr = _.pluck(arr, 'Index')
-            console.log(indexArr)
-            await query.updateMultiple(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
-            await query.updateMultiple(dbConstants.dbSchema.results, { $inc: { Query_count: 1 } }, { Index: {$in: indexArr} });
+            let indexArr = _.pluck(arr, 'Index');
+            await forEach(indexArr, async(element) => {
+                let res = await query.updateSingle(dbConstants.dbSchema.products, { $inc: { Query_count: 1 } }, { Index: element });
+                await query.updateSingle(dbConstants.dbSchema.results, { $inc: { Query_count: 1 } }, { Index: element });
+            });
             return false;
         } catch (error) {
             console.log(error);
@@ -290,8 +304,14 @@ const getAds = async(requestParam, code) => {
             let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
             let res = await client2.get(key);
             if(res){
+                let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_key: key}, { _id: 0, category_id:1} );
+                
                 let settings = await query.selectWithAndOne(dbConstants.dbSchema.settings, {}, { _id: 0} );
-                let ads = await query.selectWithAndFilter(dbConstants.dbSchema.ads, {}, {
+                let getAdColumn = {};
+                if(product.category_id !=''){
+                    getAdColumn.category_id = product.category_id
+                }
+                let ads = await query.selectWithAndFilter(dbConstants.dbSchema.ads, getAdColumn, {
                     _id: 0,
                     Index:1
                 }, {created_at:-1}, {});
@@ -301,7 +321,6 @@ const getAds = async(requestParam, code) => {
                 
                 let skip = 0;
                 let limit = remain
-                let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_key: key}, { _id: 0, category_id:1} );
                 let cateArr = await query.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: {$in: [product.category_id]}}, {
                     _id: 0,
                     created_at: 0,

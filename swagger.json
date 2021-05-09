@@ -153,6 +153,55 @@
                 "operationId": "AuthController.logout"
             }
         },
+        "/auth/contact-us": {
+            "post": {
+                "x-controller-name": "AuthController",
+                "x-operation-name": "ContactUs",
+                "tags": ["AuthController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "ContactUs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Optional"
+                                    },
+                                    "mobile": {
+                                        "type": "string",
+                                        "description": "Optional"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "AuthController.ContactUs"
+            }
+        },
         "/auth/get-lottie-animation": {
             "get": {
                 "x-controller-name": "AuthController",
@@ -182,6 +231,37 @@
                     }
                 }],
                 "operationId": "AuthController.LottieAnimation"
+            }
+        },
+        "/auth/get-about-us-content": {
+            "get": {
+                "x-controller-name": "AuthController",
+                "x-operation-name": "AboutUs",
+                "tags": ["AuthController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "AboutUs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "operationId": "AuthController.AboutUs"
             }
         },
 

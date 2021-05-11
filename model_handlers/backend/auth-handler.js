@@ -133,7 +133,6 @@ const sendNotification = async function(requestParam, done) {
             return;
         }
         const fcm = new FCM(config.push_server_key);
-        console.log(_.pluck(users, 'device_token'))
         const message = {
             registration_ids: _.pluck(users, 'device_token'),
             collapse_key: 'green',
@@ -144,7 +143,6 @@ const sendNotification = async function(requestParam, done) {
                 push_type: 'promotion',
             }
         };
-        console.log(message);
         fcm.send(message, function(error, response) {
             console.log(error);
             console.log(response);

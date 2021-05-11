@@ -133,8 +133,9 @@ const sendNotification = async function(requestParam, done) {
             return;
         }
         const fcm = new FCM(config.push_server_key);
+        console.log(_.pluck(users, 'device_token'))
         const message = {
-            registration_ids: ["","cMxWv5Sc-KlXPkttgNZFn6:APA91bGIJ2UjRTtGz6vgvdAjgI_epvpuf1ibcEMbCsHbiYHtSNkMjXIOsPD0Kd24NudRKo7NXP1_P2iicrU8-T37mslpCHwQ1ZEjcdFaVyvXFwFj5PFOT5lC77v5Ss59np2n_SzYlOaV"],
+            registration_ids: _.pluck(users, 'device_token'),
             collapse_key: 'green',
             data: {
                 title: 'Buy Smart',

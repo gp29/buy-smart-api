@@ -10,9 +10,9 @@ let _ = require('underscore');
 const config = require('./../../config');
 const passwordHandler = require('./../../utils/password');
 const Admin = require('./../../models/admin');
-const contact_us = require('./../../models/contact-us');
 const about_us = require('./../../models/about-us');
 const FCM = require('fcm-node');
+var mv = require('mv');
 
 const login = function(requestParam, done){
 	query.selectWithAndOne(dbConstants.dbSchema.admins, {email: requestParam.email}, {
@@ -121,7 +121,8 @@ const getUsers = async function(requestParam, done) {
     });
 };
 
-const sendNotification = async function(requestParam, done) {
+const sendNotification = async function(requestParam, req, done) {
+    let fullUrl = req.protocol + '://' + req.get('host');
     requestParam.user_id = _.pluck(requestParam.user_id, 'id')
     query.selectWithAnd(dbConstants.dbSchema.users, {user_id:{$in: requestParam.user_id}}, {
         user_id: 1,
@@ -132,22 +133,30 @@ const sendNotification = async function(requestParam, done) {
             done(errors.internalServer(true));
             return;
         }
-        const fcm = new FCM(config.push_server_key);
-        const message = {
-            registration_ids: _.pluck(users, 'device_token'),
-            collapse_key: 'green',
-            data: {
-                title: 'Buy Smart',
-                body: requestParam.description,
-                type: 'promotion',
-                push_type: 'promotion',
-            }
-        };
-        fcm.send(message, function(error, response) {
-            console.log(error);
-            console.log(response);
-        }) 
-        done(null, {})
+        mv(req.files.small_icon.path, './public/notification/'+req.files.small_icon.name, function(err) {
+            requestParam.small_icon = fullUrl+'/notification/'+req.files.small_icon.name;
+            mv(req.files.big_icon.path, './public/notification/'+req.files.big_icon.name, function(err) {
+                requestParam.big_icon = fullUrl+'/notification/'+req.files.big_icon.name;
+                const fcm = new FCM(config.push_server_key);
+                const message = {
+                    registration_ids: _.pluck(users, 'device_token'),
+                    collapse_key: 'green',
+                    data: {
+                        title: requestParam.title,
+                        body: requestParam.description,
+                        type: requestParam.type,
+                        metadata: requestParam.metadata,
+                        small_icon: requestParam.small_icon,
+                        big_icon: requestParam.big_icon,
+                    }
+                };
+                fcm.send(message, function(error, response) {
+                    console.log(error);
+                    console.log(response);
+                }) 
+                done(null, {})
+            });
+        });
     });
 };
 

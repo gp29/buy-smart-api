@@ -51,7 +51,8 @@ router.post('/reset', function (req, res) {
 });
 
 router.post('/send-notification', function (req, res) {
-	authHandler.sendNotification(req.body,function (error, response) {
+	let requestParam = JSON.parse(req.body.fields);
+	authHandler.sendNotification(requestParam, req, function (error, response) {
 		if (error) {
 			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
 			return;

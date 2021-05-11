@@ -19,6 +19,18 @@ var settingSchema = new Schema({
         type: Number,
         default: 0
     },
+    email: {
+        type: String,
+        default: ''
+    },
+    mobile: {
+        type: String,
+        default: ''
+    },
+    address: {
+        type: String,
+        default: ''
+    },
 });
 
 

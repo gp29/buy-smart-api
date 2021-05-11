@@ -154,7 +154,7 @@
             }
         },
         "/auth/contact-us": {
-            "post": {
+            "get": {
                 "x-controller-name": "AuthController",
                 "x-operation-name": "ContactUs",
                 "tags": ["AuthController"],
@@ -174,31 +174,13 @@
                         }
                     }
                 },
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "user_id": {
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "description": "Optional"
-                                    },
-                                    "mobile": {
-                                        "type": "string",
-                                        "description": "Optional"
-                                    },
-                                    "message": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
                     }
-                },
+                }],
                 "operationId": "AuthController.ContactUs"
             }
         },

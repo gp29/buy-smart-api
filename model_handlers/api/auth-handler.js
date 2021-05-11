@@ -65,8 +65,8 @@ const logout = async(requestParam) => {
 const contactus = async(requestParam) => {
     return new Promise(async(resolve, reject) => {
         try {
-            await query.insertSingle(dbConstants.dbSchema.contact_us, requestParam);
-            resolve({});
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.settings, {}, { _id: 0, email:1, mobile:1, address:1} );
+            resolve(response);
             return;
         } catch (error) {
             console.log(error)

@@ -134,7 +134,7 @@ const sendNotification = async function(requestParam, done) {
         }
         const fcm = new FCM(config.push_server_key);
         const message = {
-            registration_ids: ["cMxWv5Sc-KlXPkttgNZFn6:APA91bGIJ2UjRTtGz6vgvdAjgI_epvpuf1ibcEMbCsHbiYHtSNkMjXIOsPD0Kd24NudRKo7NXP1_P2iicrU8-T37mslpCHwQ1ZEjcdFaVyvXFwFj5PFOT5lC77v5Ss59np2n_SzYlOaV"],
+            registration_ids: ["","cMxWv5Sc-KlXPkttgNZFn6:APA91bGIJ2UjRTtGz6vgvdAjgI_epvpuf1ibcEMbCsHbiYHtSNkMjXIOsPD0Kd24NudRKo7NXP1_P2iicrU8-T37mslpCHwQ1ZEjcdFaVyvXFwFj5PFOT5lC77v5Ss59np2n_SzYlOaV"],
             collapse_key: 'green',
             data: {
                 title: 'Buy Smart',

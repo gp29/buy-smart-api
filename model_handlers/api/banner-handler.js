@@ -12,7 +12,7 @@ const list = async(req, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             let fullUrl = req.protocol + '://' + req.get('host');
-            let response = await query.selectWithAnd(dbConstants.dbSchema.banners, {}, { _id: 0, image:1} );
+            let response = await query.selectWithAnd(dbConstants.dbSchema.banners, {}, { _id: 0, image:1, url:1} );
             _.each(response, (elem) => {
                 elem.image = fullUrl+'/banner/'+elem.image;
             });

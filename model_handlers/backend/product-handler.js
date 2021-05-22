@@ -24,13 +24,18 @@ const get = function(requestParam, done){
     let limit = requestParam.sizePerPage ? requestParam.sizePerPage : 50;
     var obj = {};
     let skip = page * limit;
+    let skipData = page * limit;
     query.countRecord(dbConstants.dbSchema.products, {}, function(error, count) {
-        query.selectWithAndFilter(dbConstants.dbSchema.products, {}, {
+        let range = _.range(1, (count + 1))
+        if(skipData > 0){
+            _.each(_.range(1, (skipData + 1)), (elem) =>{
+                range.splice(-1, 1)
+            });
+        }
+        let arr = _.last(range, limit);
+        query.selectWithAndFilter(dbConstants.dbSchema.products, {Index:{$in: arr}}, {
             _id: 0,
-        }, {created_at:-1}, {
-            skip,
-            limit
-        }, (error, response) => {
+        }, {created_at:-1}, {}, (error, response) => {
             if (error) {
                 logger('Error: can not get ', dbConstants.dbSchema.products);
                 done(errors.internalServer(true), null);

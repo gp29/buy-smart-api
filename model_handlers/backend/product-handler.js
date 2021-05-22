@@ -22,8 +22,6 @@ client.on("error", function(error) {
 const get = function(requestParam, done){
 	let page = requestParam.page ? requestParam.page : 0;
     let limit = requestParam.sizePerPage ? requestParam.sizePerPage : 50;
-    var obj = {};
-    let skip = page * limit;
     let skipData = page * limit;
     query.countRecord(dbConstants.dbSchema.products, {}, function(error, count) {
         let range = _.range(1, (count + 1))
@@ -41,9 +39,10 @@ const get = function(requestParam, done){
                 done(errors.internalServer(true), null);
                 return;
             }
-            obj.product = response;
-            obj.count = count;
-            done(null, obj);
+            done(null, {
+                product: response,
+                count: count
+            });
         });
     });
 };

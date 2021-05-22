@@ -28,6 +28,10 @@ client2.get = util.promisify(client2.get);
 const client3 = redis.createClient("redis://127.0.0.1:6379/2");
 client3.get = util.promisify(client3.get);
 
+//FOR Ad CACHE
+const client4 = redis.createClient("redis://127.0.0.1:6379/3");
+client4.get = util.promisify(client4.get);
+
 const getResults = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
@@ -300,17 +304,10 @@ const getAds = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             let adArr = [];
-            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
-            if(!response){
-                reject(errors.userNotFound(true, code));
-                return;
-            }
             let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
             let res = await client2.get(key);
             if(res){
                 let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_key: key}, { _id: 0, category_id:1} );
-                
-                let settings = await query.selectWithAndOne(dbConstants.dbSchema.settings, {}, { _id: 0} );
                 let getAdColumn = {};
                 if(product.category_id !=''){
                     getAdColumn.category_id = product.category_id
@@ -321,19 +318,25 @@ const getAds = async(requestParam, code) => {
                 }, {created_at:-1}, {});
                 let displayProducts = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(ads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
                 
-                let remain = settings.display_ad - displayProducts.length
+                let cateArr = [];
+                let res = await client4.get(product.category_id);
+                if(res){
+                    cateArr = JSON.parse(res)
+                }
+                //let settings = await query.selectWithAndOne(dbConstants.dbSchema.settings, {}, { _id: 0} );
+                // let remain = settings.display_ad - displayProducts.length
                 
-                let skip = 0;
-                let limit = remain
-                let cateArr = await query.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: {$in: [product.category_id]}}, {
-                    _id: 0,
-                    created_at: 0,
-                    updated_at: 0,
-                    __v: 0,
-                }, {Query_count: -1, created_at:-1}, {
-                    skip,
-                    limit
-                });
+                // let skip = 0;
+                // let limit = remain
+                // let cateArr = await query.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: {$in: [product.category_id]}}, {
+                //     _id: 0,
+                //     created_at: 0,
+                //     updated_at: 0,
+                //     __v: 0,
+                // }, {Query_count: -1, created_at:-1}, {
+                //     skip,
+                //     limit
+                // });
                 displayProducts.push(cateArr)
                 adArr = _.flatten(displayProducts);
             }

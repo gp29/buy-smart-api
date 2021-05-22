@@ -40,4 +40,14 @@ router.get('/set-feed',function (req, res) {
 	});
 });
 
+router.get('/set-ad',function (req, res) {
+	settingHandler.setAd(req,function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
 module.exports = router;

@@ -16,6 +16,10 @@ const util = require('util');
 const client3 = redis.createClient("redis://127.0.0.1:6379/2");
 client3.get = util.promisify(client3.get);
 
+//FOR AD CACHE
+const client4 = redis.createClient("redis://127.0.0.1:6379/3");
+client4.get = util.promisify(client4.get);
+
 const get = function(req,done){
 	query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
         _id: 0,
@@ -63,7 +67,7 @@ const update = function(requestParam,done){
     });
 };
 
-const setFeed = (requestParam, done) => {
+const setFeed = async (requestParam, done) => {
     client3.flushdb( function (err, succeeded) {
         console.log(succeeded);
         query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
@@ -100,8 +104,39 @@ const setFeed = (requestParam, done) => {
     });
 };
 
+const setAd = async (requestParam, done) => {
+    client4.flushdb( function (err, succeeded) {
+        console.log(succeeded);
+        query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
+            _id: 0,
+            display_ad:1
+        }, {}, {}, async (error, settings) => {
+            let display_ad = settings.display_ad ? parseFloat(settings.display_ad) : 20;
+            let skip = 0;
+            let limit = display_ad;
+            asyncLoop.forEachSeries(_.range(1, 1801), async function(element, callbackSingleRec) {
+                element = element.toString()
+                let data = await queryApi.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: element}, {
+                    _id: 0,
+                    created_at: 0,
+                    updated_at: 0,
+                    __v: 0,
+                }, {Query_count: -1}, {
+                    skip,
+                    limit
+                });
+                client4.set(element, JSON.stringify(data));
+                callbackSingleRec();
+            }, function(){
+                return false;
+            });
+        });
+    });
+};
+
 module.exports = {
 	get,
 	update,
-    setFeed
+    setFeed,
+    setAd
 };

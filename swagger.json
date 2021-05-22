@@ -284,6 +284,37 @@
                 "operationId": "ProductController.Feed"
             }
         },
+        "/product/tranding-feed": {
+            "get": {
+                "x-controller-name": "ProductController",
+                "x-operation-name": "TrandingFeed",
+                "tags": ["ProductController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "TrandingFeed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "operationId": "ProductController.TrandingFeed"
+            }
+        },
         "/product/get-results": {
             "get": {
                 "x-controller-name": "ProductController",

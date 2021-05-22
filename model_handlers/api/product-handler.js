@@ -24,6 +24,10 @@ client.get = util.promisify(client.get);
 const client2 = redis.createClient("redis://127.0.0.1:6379/1");
 client2.get = util.promisify(client2.get);
 
+//FOR FEED CACHE
+const client3 = redis.createClient("redis://127.0.0.1:6379/2");
+client3.get = util.promisify(client3.get);
+
 const getResults = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
@@ -353,27 +357,35 @@ const feed = async(requestParam, code) => {
                 reject(errors.userNotFound(true, code));
                 return;
             }
+            requestParam.page = parseFloat(requestParam.page);
+            let res = await client3.get(requestParam.page);
+            if(res){
+                resolve(JSON.parse(res));
+                return;
+            }
+            else{
+                let arr = [];
+                // let feeds = await query.selectWithAnd(dbConstants.dbSchema.feeds, {}, { _id: 0, Index:1} );
+                // arr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(feeds, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+                // let limit = settings.product_feed ? settings.product_feed : 15;
+                // let page = requestParam.page - 1;
+                // let skip = page * limit;
+                // let data = await query.selectWithAndFilter(dbConstants.dbSchema.products, {Index: {$nin: _.pluck(feeds, 'Index')}}, {
+                //     _id: 0,
+                //     created_at: 0,
+                //     updated_at: 0,
+                //     __v: 0,
+                // }, {Query_count: -1}, {
+                //     skip,
+                //     limit
+                // });
+                // arr.push(data);
+                // arr = _.flatten(arr);
+                // setDataCacheFeed(arr, requestParam.page)
+                resolve(arr);
+                return;
+            }
 
-            let arr = [];
-            let feeds = await query.selectWithAnd(dbConstants.dbSchema.feeds, {}, { _id: 0, Index:1} );
-            arr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(feeds, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
-
-            let limit = settings.product_feed ? settings.product_feed : 15;
-            let page = parseFloat(requestParam.page) - 1;
-            let skip = page * limit;
-            let data = await query.selectWithAndFilter(dbConstants.dbSchema.products, {Index: {$nin: _.pluck(feeds, 'Index')}}, {
-                _id: 0,
-                created_at: 0,
-                updated_at: 0,
-                __v: 0,
-            }, {Query_count: -1, created_at:-1}, {
-                skip,
-                limit
-            });
-            arr.push(data);
-            arr = _.flatten(arr)
-            resolve(arr);
-            return;
         } catch (error) {
             console.log(error);
             reject(error)
@@ -382,6 +394,41 @@ const feed = async(requestParam, code) => {
     })
 };
 
+const setDataCacheFeed = (arr, page) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            arr = JSON.stringify(arr)
+            client3.set(page, arr);
+            return false;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    })
+};
+
+
+const trandingFeed = async(requestParam, code) =>{
+    return new Promise(async(resolve, reject) => {
+        try {
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
+            if(!response){
+                reject(errors.userNotFound(true, code));
+                return;
+            }
+            let arr = [];
+            let feeds = await query.selectWithAnd(dbConstants.dbSchema.feeds, {}, { _id: 0, Index:1} );
+            arr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(feeds, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+            resolve(arr);
+            return;
+
+        } catch (error) {
+            console.log(error);
+            reject(error)
+            return
+        }
+    })
+};
 
 module.exports = {
     getResults,
@@ -392,5 +439,6 @@ module.exports = {
     getCacheResults,
     feed,
     dataInsertAndroid,
-    getAds
+    getAds,
+    trandingFeed
 };

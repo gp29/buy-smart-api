@@ -30,4 +30,14 @@ router.get('/get',function (req, res) {
 	});
 });
 
+router.get('/set-feed',function (req, res) {
+	settingHandler.setFeed(req,function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
 module.exports = router;

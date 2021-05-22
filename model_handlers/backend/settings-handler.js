@@ -5,10 +5,16 @@ const jsonResponse = require('./../../utils/json-response');
 const errors = require('./../../utils/dz-errors');
 const dbConstants = require('./../../constants/db-constants');
 const query = require('./../../utils/query-creator');
-let async = require('async');
+const queryApi = require('./../../utils/query-creator-api');
+let asyncLoop = require('async');
 let _ = require('underscore');
 const Setting = require('./../../models/settings');
 
+const redis = require("redis");
+const util = require('util');
+//FOR FEED CACHE
+const client3 = redis.createClient("redis://127.0.0.1:6379/2");
+client3.get = util.promisify(client3.get);
 
 const get = function(req,done){
 	query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
@@ -57,7 +63,45 @@ const update = function(requestParam,done){
     });
 };
 
+const setFeed = (requestParam, done) => {
+    client3.flushdb( function (err, succeeded) {
+        console.log(succeeded);
+        query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
+            _id: 0,
+            product_feed:1
+        }, {}, {}, async (error, settings) => {
+            let product_feed = settings.product_feed ? parseFloat(settings.product_feed) : 20;
+            let skip = 0;
+            let limit = product_feed * product_feed;
+            let data = await queryApi.selectWithAndFilter(dbConstants.dbSchema.products, {}, {
+                _id: 0,
+                created_at: 0,
+                updated_at: 0,
+                __v: 0,
+            }, {Query_count: -1}, {
+                skip,
+                limit
+            });
+            let range = _.pluck(data, 'Index')
+            asyncLoop.forEachSeries(_.range(1, (product_feed + 1)), async function(element, callbackSingleRec) {
+                let arr = _.first(range, product_feed);
+                let setData = [];
+                _.each(arr, (num) => {
+                    range = _.without(range, num);
+                    let val = _.where(data, {Index: num})
+                    setData.push(val[0])
+                })
+                client3.set(element, JSON.stringify(setData));
+                callbackSingleRec();
+            }, function(){
+                return false;
+            });
+        });
+    });
+};
+
 module.exports = {
 	get,
-	update
+	update,
+    setFeed
 };

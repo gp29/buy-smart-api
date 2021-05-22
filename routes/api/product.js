@@ -187,4 +187,25 @@ router.get('/feed', async(req, res) => {
     }
 });
 
+router.get('/tranding-feed', async(req, res) => {
+    req.query.code = 'EN';
+    try {
+        if (req.query.user_id) {
+            let response = await productHandler.trandingFeed(req.query, req.query.code);
+            jsonResponse(res, responseCodes.OK, errors.noError(), response);
+        } else {
+            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
+            return;
+        }
+    } catch (error) {
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.query.code), null);
+            return;
+        }
+    }
+});
+
 module.exports = router;

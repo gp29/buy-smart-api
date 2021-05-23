@@ -102,6 +102,10 @@ var productSchema = new Schema({
         type: String,
         default:''
     },
+    Price_arr: {
+        type: Array,
+        default:[]
+    },
     created_at: {
         type: Date,
         default: Date.now

@@ -11,6 +11,7 @@ let asyncLoop = require('async');
 const result = require('./../../models/result');
 const Product = require('./../../models/product');
 const productHandler = require('./../../model_handlers/backend/product-handler');
+const moment = require('moment');
 const { forEach } = require('p-iteration');
 
 const redis = require("redis");
@@ -150,6 +151,11 @@ const dataInsert = async(singleRec, code) => {
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
             let res = await client.get(singleRec.Img_key);
             if(!res){
+                singleRec.Discount = (parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp);
+                singleRec.Price_arr = [{
+                    date: moment(new Date()).format('YYYY-MM-DD'),
+                    price: parseFloat(singleRec.Mrp)
+                }]
                 let product = await query.insertSingle(dbConstants.dbSchema.products, singleRec);
                 client.set(singleRec.Img_key, product.Index);
                 resolve({});
@@ -187,7 +193,7 @@ const dataInsert = async(singleRec, code) => {
                 updateObj.SellPrice = singleRec.SellPrice;
                 /*if(singleRec.SellPrice && (singleRec.SellPrice!='' || singleRec.SellPrice!='null' || singleRec.SellPrice!='NULL')){
                 }*/
-                updateObj.Discount = singleRec.Discount;
+                updateObj.Discount = (parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp);
                 /*if(singleRec.Discount && (singleRec.Discount!='' || singleRec.Discount!='null' || singleRec.Discount!='NULL')){
                 }*/
                 if(singleRec.Colour && (singleRec.Colour!='' || singleRec.Colour!='null' || singleRec.Colour!='NULL')){
@@ -208,7 +214,34 @@ const dataInsert = async(singleRec, code) => {
                 if(singleRec.CS_update){
                     updateObj['$inc'] = { CS_update: 1 }
                 }
-                updateObj.Time_stamp = new Date()
+                updateObj.Time_stamp = new Date();
+
+                // FOR PRICE ARRAY
+                let product = await query.selectWithAndOne(dbConstants.dbSchema.products, { Index: parseFloat(res) }, { _id: 0, Price_arr:1} );
+                let price_arr = product ? product.Price_arr : [];
+                let today_date = moment(new Date()).format('YYYY-MM-DD')
+                let val = _.where(price_arr, {date: today_date})
+                if(val.length > 0){
+                    _.each(price_arr, (elem) => {
+                        if(elem.date == today_date){
+                            if(parseFloat(singleRec.Mrp) != elem.price){
+                                elem.price = parseFloat(singleRec.Mrp)
+                            }
+                        }
+                    });
+                }
+                else{
+                    if(price_arr.length == 20){
+                        price_arr.splice(0, 1)
+                    }
+                    price_arr.push({
+                        date: today_date,
+                        price: parseFloat(singleRec.Mrp)
+                    })
+                }
+                updateObj.Price_arr = price_arr
+                // DONE FOR ARRAY
+
                 await query.updateSingle(dbConstants.dbSchema.products, updateObj, { Index: parseFloat(res) });
                 await query.updateMultiple(dbConstants.dbSchema.results, updateObj, { Index: parseFloat(res) });
                 resolve({});

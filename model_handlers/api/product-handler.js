@@ -339,8 +339,10 @@ const getAds = async(requestParam, code) => {
             let adArr = [];
             let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
             let res = await client2.get(key);
+            console.log(res)
             if(res){
                 let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_key: key}, { _id: 0, category_id:1} );
+                console.log(product)
                 let getAdColumn = {};
                 if(product.category_id !=''){
                     getAdColumn.category_id = product.category_id
@@ -352,9 +354,10 @@ const getAds = async(requestParam, code) => {
                 let displayProducts = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(ads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
                 
                 let cateArr = [];
-                let res = await client4.get(product.category_id);
-                if(res){
-                    cateArr = JSON.parse(res)
+                let adRes = await client4.get(product.category_id);
+                console.log(adRes)
+                if(adRes){
+                    cateArr = JSON.parse(adRes)
                 }
                 //let settings = await query.selectWithAndOne(dbConstants.dbSchema.settings, {}, { _id: 0} );
                 // let remain = settings.display_ad - displayProducts.length

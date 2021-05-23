@@ -116,6 +116,8 @@ const setAd = async (requestParam, done) => {
         }, {}, {}, async (error, settings) => {
             let display_ad = settings.display_ad ? parseFloat(settings.display_ad) : 20;
             let total_category = settings.total_category ? parseFloat(settings.total_category) : 1800;
+            console.log(display_ad)
+            console.log(total_category)
             let skip = 0;
             let limit = display_ad;
             asyncLoop.forEachSeries(_.range(1, (total_category + 1)), async function(element, callbackSingleRec) {

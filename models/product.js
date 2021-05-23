@@ -133,6 +133,7 @@ productSchema.plugin(autoIncrement.plugin, {
 });
 
 productSchema.index({ Index: 1 });
+productSchema.index({ category_id: 1 });
 
 var Product = mongoose.model('Product', productSchema);
 module.exports = Product;

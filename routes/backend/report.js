@@ -70,4 +70,14 @@ router.get('/get-user-reported',function (req, res) {
 	});
 });
 
+router.post('/send-notification',function (req, res) {
+	reportHandler.sendNotification(req.body,function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
 module.exports = router;

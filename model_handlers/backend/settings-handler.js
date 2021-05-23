@@ -72,11 +72,13 @@ const setFeed = async (requestParam, done) => {
         console.log(succeeded);
         query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
             _id: 0,
-            product_feed:1
+            product_feed:1,
+            total_feed_page_cache:1
         }, {}, {}, async (error, settings) => {
             let product_feed = settings.product_feed ? parseFloat(settings.product_feed) : 20;
+            let total_feed_page_cache = settings.total_feed_page_cache ? parseFloat(settings.total_feed_page_cache) : 20;
             let skip = 0;
-            let limit = product_feed * product_feed;
+            let limit = product_feed * total_feed_page_cache;
             let data = await queryApi.selectWithAndFilter(dbConstants.dbSchema.products, {}, {
                 _id: 0,
                 created_at: 0,
@@ -87,7 +89,7 @@ const setFeed = async (requestParam, done) => {
                 limit
             });
             let range = _.pluck(data, 'Index')
-            asyncLoop.forEachSeries(_.range(1, (product_feed + 1)), async function(element, callbackSingleRec) {
+            asyncLoop.forEachSeries(_.range(1, (total_feed_page_cache + 1)), async function(element, callbackSingleRec) {
                 let arr = _.first(range, product_feed);
                 let setData = [];
                 _.each(arr, (num) => {
@@ -109,12 +111,14 @@ const setAd = async (requestParam, done) => {
         console.log(succeeded);
         query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
             _id: 0,
-            display_ad:1
+            display_ad:1,
+            total_category:1,
         }, {}, {}, async (error, settings) => {
             let display_ad = settings.display_ad ? parseFloat(settings.display_ad) : 20;
+            let total_category = settings.total_category ? parseFloat(settings.total_category) : 1800;
             let skip = 0;
             let limit = display_ad;
-            asyncLoop.forEachSeries(_.range(1, 1801), async function(element, callbackSingleRec) {
+            asyncLoop.forEachSeries(_.range(1, (total_category + 1)), async function(element, callbackSingleRec) {
                 element = element.toString()
                 let data = await queryApi.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: element}, {
                     _id: 0,

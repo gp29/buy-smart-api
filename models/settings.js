@@ -31,6 +31,14 @@ var settingSchema = new Schema({
         type: String,
         default: ''
     },
+    total_feed_page_cache: {
+        type: Number,
+        default: 0
+    },
+    total_category: {
+        type: Number,
+        default: 0
+    },
 });
 
 

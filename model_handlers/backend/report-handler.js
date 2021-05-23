@@ -5,14 +5,12 @@ const jsonResponse = require('./../../utils/json-response');
 const errors = require('./../../utils/dz-errors');
 const dbConstants = require('./../../constants/db-constants');
 const query = require('./../../utils/query-creator');
+const config = require('./../../config');
 let async = require('async');
 let _ = require('underscore');
 const report_category = require('./../../models/report-category');
+const FCM = require('fcm-node');
 
-/*
- * Used to get report_categories
- * @param {Function} done - Callback function with error, data params
- */
 const get = function(req,done){
 	let columnAndValue={}
 	if(req.query.report_category_id){
@@ -33,11 +31,6 @@ const get = function(req,done){
     });
 };
 
-/*
- * Used to create language 
- * @param {requestParam} - request parameters from body
- * @param {Function} done - Callback function with error, data params
- */
 const create = function(requestParam,done){
 	query.insertSingle(dbConstants.dbSchema.report_categories,requestParam,function (error, language) {
 		if (error) {
@@ -49,12 +42,6 @@ const create = function(requestParam,done){
 	});
 };
 
-
-/*
- * Used to update language by id 
- * @param {requestParam} - Object
- * @param {Function} done - Callback function with error, data params
- */
 const update = function(requestParam,done){
 	query.updateSingle(dbConstants.dbSchema.report_categories,requestParam, { 'report_category_id':requestParam.report_category_id},function (error, language) {
 		if (error) {
@@ -66,11 +53,6 @@ const update = function(requestParam,done){
 	});
 };
 
-/*
- * Used to action update by id
- * @param {requestParam} - Object
- * @param {Function} done - Callback function with error, data params
- */
 const action  = (requestParam, done) => {
  	if (requestParam['type']=="delete") {
         query.removeMultiple(dbConstants.dbSchema.report_categories, {
@@ -91,7 +73,6 @@ const action  = (requestParam, done) => {
         done(null, {}); 
     }
 };
-
 
 const actionUserReported  = (requestParam, done) => {
     if (requestParam['type']=="delete") {
@@ -124,6 +105,13 @@ const getUserReported = (req, done) => {
         }
     },  {
         $unwind: "$userDetails"
+    },  {
+        $lookup: {
+            from: 'report_categories',
+            localField: 'report_category_id',
+            foreignField: 'report_category_id',
+            as: 'catDetails'
+        }
     },  { 
         $match : {}
     }, { 
@@ -133,8 +121,9 @@ const getUserReported = (req, done) => {
             _id: 0,
             report_id: "$report_id",
             message: "$message",
-            user: "$userDetails.name",
+            name: "$userDetails.name",
             user_id: "$user_id",
+            category:"$catDetails"
         }
     }];
     query.joinWithAnd(dbConstants.dbSchema.reports, joinArr, (error, response) => {
@@ -143,10 +132,45 @@ const getUserReported = (req, done) => {
             done(errors.internalServer(true), null);
             return;
         }
+        _.each(response, (elem) => {
+            let title = [];
+            _.each(elem.category, (rec) => {
+                title.push(rec.title)
+            })
+            elem.category = title.toString();
+        })
         done(null, response)
     });
 };
 
+
+const sendNotification = (requestParam, done) => {
+    query.selectWithAndOne(dbConstants.dbSchema.users, {user_id:requestParam.user_id}, {
+        user_id: 1,
+        device_token:1,
+        _id: 0
+    }, function(error, users) {
+        if (error) {
+            done(errors.internalServer(true));
+            return;
+        }
+        const fcm = new FCM(config.push_server_key);
+        const message = {
+            registration_ids: [users.device_token],
+            collapse_key: 'green',
+            data: {
+                title: 'Buy Smart',
+                body: requestParam.message,
+                type: 'report',
+            }
+        };
+        fcm.send(message, function(error, response) {
+            console.log(error);
+            console.log(response);
+        }) 
+        done(null, {})
+    });
+};
 
 module.exports = {
 	get,
@@ -154,5 +178,6 @@ module.exports = {
 	action,
 	update,
     actionUserReported,
-    getUserReported
+    getUserReported,
+    sendNotification
 };

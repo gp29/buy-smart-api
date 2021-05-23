@@ -337,11 +337,10 @@ const getAds = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             let adArr = [];
-            let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
-            let res = await client2.get(key);
-            console.log(res)
-            if(res){
-                let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_key: key}, { _id: 0, category_id:1} );
+            //let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
+            //let res = await client2.get(key);
+            //if(res){
+                let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_Url: requestParam.Product_Url}, { _id: 0, category_id:1} );
                 console.log(product)
                 let getAdColumn = {};
                 if(product.category_id !=''){
@@ -375,7 +374,7 @@ const getAds = async(requestParam, code) => {
                 // });
                 displayProducts.push(cateArr)
                 adArr = _.flatten(displayProducts);
-            }
+            //}
             resolve(adArr)
             return
         } catch (error) {

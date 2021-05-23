@@ -341,7 +341,6 @@ const getAds = async(requestParam, code) => {
             //let res = await client2.get(key);
             //if(res){
                 let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_Url: requestParam.Product_Url}, { _id: 0, category_id:1} );
-                console.log(product)
                 let getAdColumn = {};
                 if(product.category_id !=''){
                     getAdColumn.category_id = product.category_id
@@ -354,7 +353,6 @@ const getAds = async(requestParam, code) => {
                 
                 let cateArr = [];
                 let adRes = await client4.get(product.category_id);
-                console.log(adRes)
                 if(adRes){
                     cateArr = JSON.parse(adRes)
                 }

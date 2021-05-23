@@ -119,7 +119,8 @@ const setAd = async (requestParam, done) => {
             let skip = 0;
             let limit = display_ad;
             asyncLoop.forEachSeries(_.range(1, (total_category + 1)), async function(element, callbackSingleRec) {
-                element = element.toString()
+                element = element.toString();
+                console.log(element)
                 let data = await queryApi.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: element}, {
                     _id: 0,
                     created_at: 0,
@@ -129,6 +130,7 @@ const setAd = async (requestParam, done) => {
                     skip,
                     limit
                 });
+                console.log(data.length)
                 client4.set(element, JSON.stringify(data));
                 callbackSingleRec();
             }, function(){

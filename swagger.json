@@ -717,6 +717,9 @@
                                     "result_id": {
                                         "type": "string"
                                     },
+                                    "url": {
+                                        "type": "string"
+                                    },
                                     "report_category_id": {
                                         "type": "string",
                                         "description": "Pass  Multiple comma seperate like 1,2,3"

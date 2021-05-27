@@ -151,10 +151,10 @@ const dataInsert = async(singleRec, code) => {
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
             let res = await client.get(singleRec.Img_key);
             if(!res){
-                singleRec.Discount = (parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp);
+                singleRec.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 singleRec.Price_arr = [{
                     date: moment(new Date()).format('YYYY-MM-DD'),
-                    price: parseFloat(singleRec.Mrp)
+                    price: parseFloat(singleRec.SellPrice)
                 }]
                 let product = await query.insertSingle(dbConstants.dbSchema.products, singleRec);
                 client.set(singleRec.Img_key, product.Index);
@@ -187,13 +187,20 @@ const dataInsert = async(singleRec, code) => {
                 if(singleRec.Img_url && (singleRec.Img_url!='' || singleRec.Img_url!='null' || singleRec.Img_url!='NULL')){
                     updateObj.Img_url = singleRec.Img_url
                 }
+
+                if(!singleRec.Mrp){
+                    singleRec.Mrp = singleRec.SellPrice
+                }
+                if(!singleRec.SellPrice){
+                    singleRec.SellPrice = singleRec.Mrp
+                }
                 updateObj.Mrp = singleRec.Mrp;
                 /*if(singleRec.Mrp && (singleRec.Mrp!='' || singleRec.Mrp!='null' || singleRec.Mrp!='NULL')){
                 }*/
                 updateObj.SellPrice = singleRec.SellPrice;
                 /*if(singleRec.SellPrice && (singleRec.SellPrice!='' || singleRec.SellPrice!='null' || singleRec.SellPrice!='NULL')){
                 }*/
-                updateObj.Discount = (parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp);
+                updateObj.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 /*if(singleRec.Discount && (singleRec.Discount!='' || singleRec.Discount!='null' || singleRec.Discount!='NULL')){
                 }*/
                 if(singleRec.Colour && (singleRec.Colour!='' || singleRec.Colour!='null' || singleRec.Colour!='NULL')){
@@ -224,20 +231,25 @@ const dataInsert = async(singleRec, code) => {
                 if(val.length > 0){
                     _.each(price_arr, (elem) => {
                         if(elem.date == today_date){
-                            if(parseFloat(singleRec.Mrp) != elem.price){
-                                elem.price = parseFloat(singleRec.Mrp)
+                            if(parseFloat(singleRec.SellPrice) != elem.price){
+                                elem.price = parseFloat(singleRec.SellPrice)
                             }
                         }
                     });
                 }
                 else{
-                    if(price_arr.length == 20){
-                        price_arr.splice(0, 1)
-                    }
                     price_arr.push({
                         date: today_date,
-                        price: parseFloat(singleRec.Mrp)
+                        price: parseFloat(singleRec.SellPrice)
                     })
+                    var a = moment(new Date(today_date));
+                    var b = moment(new Date(price_arr[0].date));
+                    let days = a.diff(b, 'days')
+                    if(days >= 20){
+                        if(price_arr.length == 20){
+                            price_arr.splice(0, 1)
+                        }
+                    }
                 }
                 updateObj.Price_arr = price_arr
                 // DONE FOR ARRAY
@@ -372,6 +384,13 @@ const getAds = async(requestParam, code) => {
                 // });
                 displayProducts.push(cateArr)
                 adArr = _.flatten(displayProducts);
+                if(adArr.length == 0){
+                    let defaultads = await query.selectWithAndFilter(dbConstants.dbSchema.default_ads, {}, {
+                        _id: 0,
+                        Index:1
+                    }, {created_at:-1}, {});
+                    adArr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(defaultads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
+                }
             //}
             resolve(adArr)
             return

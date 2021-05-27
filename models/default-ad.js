@@ -2,28 +2,24 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const idGenerator = require('./../utils/id-generator');
 
-var reportSchema = new Schema({
-    report_id: {
+var defaultadSchema = new Schema({
+    default_ad_id: {
         type: String,
         default: ''
     },
-    user_id: {
+    category_id: {
         type: String,
         default: ''
     },
-    url: {
+    Index: {
+        type: Number,
+        default: 0
+    },
+    Product_key: {
         type: String,
         default: ''
     },
-    result_id: {
-        type: String,
-        default: ''
-    },
-    report_category_id: {
-        type: Array,
-        default: []
-    },
-    message: {
+    Product_Url: {
         type: String,
         default: ''
     },
@@ -37,15 +33,14 @@ var reportSchema = new Schema({
     }
 });
 
-
-
 // // Execute before each user.save() call
-reportSchema.pre('save', function(callback) {
-    idGenerator.generateId('reports', 'report_id', 'REP', (err, ID) => {
-        this.report_id = ID;
+defaultadSchema.pre('save', function(callback) {
+    idGenerator.generateId('default_ads', 'default_ad_id', 'AD', (err, ID) => {
+        this.default_ad_id = ID;
         callback();
     });
 });
 
-var Report = mongoose.model('Report', reportSchema);
-module.exports = Report;
+
+var Default_ad = mongoose.model('Default_ad', defaultadSchema);
+module.exports = Default_ad;

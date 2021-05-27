@@ -96,55 +96,73 @@ const actionUserReported  = (requestParam, done) => {
 };
 
 const getUserReported = (req, done) => {
-    let joinArr = [{
-        $lookup: {
-            from: 'users',
-            localField: 'user_id',
-            foreignField: 'user_id',
-            as: 'userDetails'
-        }
-    },  {
-        $unwind: "$userDetails"
-    },  {
-        $lookup: {
-            from: 'report_categories',
-            localField: 'report_category_id',
-            foreignField: 'report_category_id',
-            as: 'catDetails'
-        }
-    },  { 
-        $match : {}
-    }, { 
-        $sort : {created_at:-1}
-    }, {
-        $project: {
-            _id: 0,
-            report_id: "$report_id",
-            message: "$message",
-            name: "$userDetails.name",
-            user_id: "$user_id",
-            category:"$catDetails"
-        }
-    }];
-    query.joinWithAnd(dbConstants.dbSchema.reports, joinArr, (error, response) => {
-        if (error) {
-            logger('Error: can not get record.');
-            done(errors.internalServer(true), null);
-            return;
-        }
-        _.each(response, (elem) => {
-            let title = [];
-            _.each(elem.category, (rec) => {
-                title.push(rec.title)
+    query.selectWithAndOne(dbConstants.dbSchema.settings, {}, {
+        report_default_msg:1,
+        _id: 0
+    }, function(error, settings) {
+        let joinArr = [{
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: 'user_id',
+                as: 'userDetails'
+            }
+        },  {
+            $unwind: "$userDetails"
+        },  {
+            $lookup: {
+                from: 'report_categories',
+                localField: 'report_category_id',
+                foreignField: 'report_category_id',
+                as: 'catDetails'
+            }
+        },  {
+            $lookup: {
+                from: 'results',
+                localField: 'result_id',
+                foreignField: 'result_id',
+                as: 'resDetails'
+            }
+        },  { 
+            $match : {}
+        }, { 
+            $sort : {created_at:-1}
+        }, {
+            $project: {
+                _id: 0,
+                report_id: "$report_id",
+                message: "$message",
+                name: "$userDetails.name",
+                user_id: "$user_id",
+                category:"$catDetails",
+                results:"$resDetails",
+                url:"$url"
+            }
+        }];
+        query.joinWithAnd(dbConstants.dbSchema.reports, joinArr, (error, response) => {
+            if (error) {
+                logger('Error: can not get record.');
+                done(errors.internalServer(true), null);
+                return;
+            }
+            response = JSON.parse(JSON.stringify(response))
+            _.each(response, (elem) => {
+                elem.url = elem.url ? elem.url : ''
+                let title = [];
+                _.each(elem.category, (rec) => {
+                    title.push(rec.title)
+                })
+                elem.category = title.toString();
+                elem.report_default_msg = settings.report_default_msg ? settings.report_default_msg : 'Thank you';
             })
-            elem.category = title.toString();
-        })
-        done(null, response)
+            done(null, response)
+        });
     });
 };
 
 
 const sendNotification = (requestParam, done) => {
+    console.log(requestParam)
     query.selectWithAndOne(dbConstants.dbSchema.users, {user_id:requestParam.user_id}, {
         user_id: 1,
         device_token:1,

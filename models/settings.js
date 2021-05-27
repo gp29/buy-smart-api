@@ -31,6 +31,10 @@ var settingSchema = new Schema({
         type: String,
         default: ''
     },
+    report_default_msg: {
+        type: String,
+        default: ''
+    },
     total_feed_page_cache: {
         type: Number,
         default: 0

@@ -127,6 +127,7 @@ const sendNotification = async function(requestParam, req, done) {
     query.selectWithAnd(dbConstants.dbSchema.users, {user_id:{$in: requestParam.user_id}}, {
         user_id: 1,
         device_token:1,
+        name:1,
         _id: 0
     }, function(error, users) {
         if (error) {
@@ -137,26 +138,38 @@ const sendNotification = async function(requestParam, req, done) {
             requestParam.small_icon = fullUrl+'/notification/'+req.files.small_icon.name;
             mv(req.files.big_icon.path, './public/notification/'+req.files.big_icon.name, function(err) {
                 requestParam.big_icon = fullUrl+'/notification/'+req.files.big_icon.name;
-                const fcm = new FCM(config.push_server_key);
-                const message = {
-                    registration_ids: _.pluck(users, 'device_token'),
-                    collapse_key: 'green',
-                    data: {
-                        title: requestParam.title,
-                        body: requestParam.description,
-                        type: requestParam.type,
-                        metadata: requestParam.metadata,
-                        small_icon: requestParam.small_icon,
-                        big_icon: requestParam.big_icon,
-                    }
-                };
-                fcm.send(message, function(error, response) {
-                    console.log(error);
-                    console.log(response);
-                }) 
+                sendNotificationUser(requestParam, users);
                 done(null, {})
             });
         });
+    });
+};
+
+const sendNotificationUser = (requestParam, users, done) => {
+    async.forEachSeries(users, async function(singleRec, callbackSingleRec) {
+        let description = requestParam.description
+        description = description.replace('#NAME#', singleRec.name)
+        const fcm = new FCM(config.push_server_key);
+        const message = {
+            registration_ids: [singleRec.device_token],
+            collapse_key: 'green',
+            data: {
+                title: requestParam.title,
+                body: description,
+                type: requestParam.type,
+                sub_type: requestParam.sub_type,
+                metadata: requestParam.metadata,
+                small_icon: requestParam.small_icon,
+                big_icon: requestParam.big_icon,
+            }
+        };
+        fcm.send(message, function(error, response) {
+            console.log(error);
+            console.log(response);
+            callbackSingleRec();
+        })
+    }, function(){
+        return false;
     });
 };
 

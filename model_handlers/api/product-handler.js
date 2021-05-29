@@ -146,12 +146,12 @@ const dataInsert = async(singleRec, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             delete singleRec.Index;
+            singleRec.SellPrice = (singleRec.SellPrice).match(/\d/g)
+            singleRec.Mrp = (singleRec.Mrp).match(/\d/g)
             singleRec.Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url)
 
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
             let res = await client.get(singleRec.Img_key);
-            console.log(singleRec)
-            console.log(res)
             if(!res){
                 singleRec.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 singleRec.Price_arr = [{

@@ -152,11 +152,35 @@ const dataInsert = async(singleRec, code) => {
             if(!singleRec.SellPrice){
                 singleRec.SellPrice = singleRec.Mrp
             }
-            singleRec.SellPrice = (singleRec.SellPrice).match(/\d/g)
-            singleRec.SellPrice = (singleRec.SellPrice).join("");
+            let SellPrice = singleRec.SellPrice.split('.')
+            if(SellPrice.length > 1){
+                SellPrice[0] = (SellPrice[0]).match(/\d/g)
+                SellPrice[0] = (SellPrice[0]).join("");
 
-            singleRec.Mrp = (singleRec.Mrp).match(/\d/g)
-            singleRec.Mrp = (singleRec.Mrp).join("");
+                SellPrice[1] = (SellPrice[1]).match(/\d/g)
+                SellPrice[1] = (SellPrice[1]).join("");
+                singleRec.SellPrice = SellPrice[0]+'.'+SellPrice[1]
+            }
+            else{
+                SellPrice[0] = (SellPrice[0]).match(/\d/g)
+                SellPrice[0] = (SellPrice[0]).join("");
+                singleRec.SellPrice = SellPrice[0]
+            }
+
+            let Mrp = singleRec.Mrp.split('.')
+            if(Mrp.length > 1){
+                Mrp[0] = (Mrp[0]).match(/\d/g)
+                Mrp[0] = (Mrp[0]).join("");
+
+                Mrp[1] = (Mrp[1]).match(/\d/g)
+                Mrp[1] = (Mrp[1]).join("");
+                singleRec.Mrp = Mrp[0]+'.'+Mrp[1]
+            }
+            else{
+                Mrp[0] = (Mrp[0]).match(/\d/g)
+                Mrp[0] = (Mrp[0]).join("");
+                singleRec.Mrp = Mrp[0]
+            }
 
             singleRec.Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url)
 

@@ -146,6 +146,8 @@ const dataInsert = async(singleRec, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             delete singleRec.Index;
+            console.log(singleRec.Mrp)
+            console.log(singleRec.SellPrice)
             if(!singleRec.Mrp){
                 singleRec.Mrp = singleRec.SellPrice
             }
@@ -154,6 +156,8 @@ const dataInsert = async(singleRec, code) => {
             }
             singleRec.SellPrice = (singleRec.SellPrice).match(/\d/g)
             singleRec.Mrp = (singleRec.Mrp).match(/\d/g)
+            console.log(singleRec.Mrp)
+            console.log(singleRec.SellPrice)
             singleRec.Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url)
 
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
@@ -345,6 +349,10 @@ const getCacheResults = async(requestParam, code) => {
             if(res){
                 arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: res}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
             }
+            arr = JSON.parse(JSON.stringify(arr))
+            _.each(arr, (elem) => {
+                elem.result_id = res
+            })
             updateQueryCount(arr)
             resolve(arr)
             return

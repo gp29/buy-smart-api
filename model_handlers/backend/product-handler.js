@@ -156,8 +156,13 @@ const getProductKeyExtract = async (url) => {
                 }
             }
             else if(url.includes('shopclues.com') == true){
+                /*url = url.substring(url.lastIndexOf("/") + 1, url.length);
+                finalString = 'SC' + url.split('.',1)[0];*/
+
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
-                finalString = 'SC' + url.split('.',1)[0];
+                url = url.split('.',1)[0].split('-')
+                url = url.slice(-1)[0] 
+                finalString = 'SC' + url;
             }
             else if(url.includes('1mg.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);

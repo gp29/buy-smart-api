@@ -230,20 +230,28 @@ const dataInsert = async(singleRec, code) => {
                 let price_arr = product ? product.Price_arr : [];
 
                 let today_date = moment(new Date()).format('YYYY-MM-DD')
-                let rec = price_arr.slice(-1)[0]
-                if(rec.price != parseFloat(singleRec.SellPrice)){
+                if(price_arr.length > 0){
+                    let rec = price_arr.slice(-1)[0]
+                    if(rec.price != parseFloat(singleRec.SellPrice)){
+                        price_arr.push({
+                            date: today_date,
+                            price: parseFloat(singleRec.SellPrice)
+                        })
+                        var a = moment(new Date(today_date));
+                        var b = moment(new Date(rec.date));
+                        let days = a.diff(b, 'days')
+                        if(days >= 20){
+                            if(price_arr.length > 0){
+                                price_arr.splice(0, 1)
+                            }
+                        }
+                    }
+                }
+                else{
                     price_arr.push({
                         date: today_date,
                         price: parseFloat(singleRec.SellPrice)
                     })
-                    var a = moment(new Date(today_date));
-                    var b = moment(new Date(rec.date));
-                    let days = a.diff(b, 'days')
-                    if(days >= 20){
-                        if(price_arr.length > 0){
-                            price_arr.splice(0, 1)
-                        }
-                    }
                 }
 
                 /*let val = _.where(price_arr, {date: today_date})

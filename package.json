@@ -25,6 +25,7 @@
 		"csvtojson": "^2.0.10",
 		"d": "^1.0.0",
 		"debug": "2.6.8",
+		"entropy-string": "^4.2.0",
 		"express": "4.15.3",
 		"express-fileupload": "^0.1.4",
 		"express-session": "^1.15.4",

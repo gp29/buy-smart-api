@@ -803,6 +803,52 @@
                 },
                 "operationId": "ScrapController.InsertUrl"
             }
+        },
+        "/scrap/scrap-done-or-not": {
+            "post": {
+                "x-controller-name": "ScrapController",
+                "x-operation-name": "ScrapDOneOrNot",
+                "tags": ["ScrapController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "ScrapDOneOrNot",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "done": {
+                                        "type": "string",
+                                        "description": "Pass yes or no"
+                                    },
+                                    "html_string": {
+                                        "type": "string",
+                                        "description": "If get then pass other pass empty('') "
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "ScrapController.ScrapDOneOrNot"
+            }
         }
     },
     "components": {},

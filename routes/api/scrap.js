@@ -44,5 +44,26 @@ router.post('/insert-background-scrap-url', async(req, res) => {
     }
 });
 
+router.post('/scrap-done-or-not', async(req, res) => {
+    req.body.code = 'EN';
+    try {
+        if (req.body.url && req.body.done) {
+            let response = await scrapHandler.scrapDoneOrNot(req.body);
+            jsonResponse(res, responseCodes.OK, errors.noError(), response);
+        } else {
+            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.body.code), null);
+            return;
+        }
+    } catch (error) {
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.body.code), null);
+            return;
+        }
+    }
+});
+
 
 module.exports = router;

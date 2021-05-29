@@ -21,5 +21,6 @@ module.exports = {
         ads: 'Ad',
         default_ads: 'Default_ad',
         about_us: 'About_us',
+        temp_scraps: 'Temp_scrap',
     }
 };

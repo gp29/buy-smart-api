@@ -172,7 +172,8 @@ const getProductKeyExtract = async (url) => {
             else if(url.includes('pharmeasy.in') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);
                 url = url.split('.',1)[0].split('-');
-                finalString = "PH" + url.slice(-1)[0]
+                finalString = "PH" + url.slice(-1)[0];
+                finalString = finalString.split('?')[0]
             }
             else if(url.includes('nykaafashion.com') == true){
                 url = url.substring(url.lastIndexOf("/") + 1, url.length);

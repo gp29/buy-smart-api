@@ -162,7 +162,7 @@ const dataInsert = async(singleRec, code) => {
                 singleRec.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 singleRec.Price_arr = [{
                     date: moment(new Date()).format('YYYY-MM-DD'),
-                    price: parseFloat((singleRec.SellPrice).match(/\d/g))
+                    price: parseFloat(singleRec.SellPrice)
                 }]
                 let product = await query.insertSingle(dbConstants.dbSchema.products, singleRec);
                 client.set(singleRec.Img_key, product.Index);
@@ -202,7 +202,7 @@ const dataInsert = async(singleRec, code) => {
                 updateObj.SellPrice = singleRec.SellPrice;
                 /*if(singleRec.SellPrice && (singleRec.SellPrice!='' || singleRec.SellPrice!='null' || singleRec.SellPrice!='NULL')){
                 }*/
-                updateObj.Discount = 100 - ((parseFloat((singleRec.SellPrice).match(/\d/g)) * 100) / parseFloat((singleRec.Mrp).match(/\d/g)));
+                updateObj.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 /*if(singleRec.Discount && (singleRec.Discount!='' || singleRec.Discount!='null' || singleRec.Discount!='NULL')){
                 }*/
                 if(singleRec.Colour && (singleRec.Colour!='' || singleRec.Colour!='null' || singleRec.Colour!='NULL')){
@@ -231,10 +231,10 @@ const dataInsert = async(singleRec, code) => {
 
                 let today_date = moment(new Date()).format('YYYY-MM-DD')
                 let rec = price_arr.slice(-1)[0]
-                if(rec.price != parseFloat((singleRec.SellPrice).match(/\d/g))){
+                if(rec.price != parseFloat(singleRec.SellPrice)){
                     price_arr.push({
                         date: today_date,
-                        price: parseFloat((singleRec.SellPrice).match(/\d/g))
+                        price: parseFloat(singleRec.SellPrice)
                     })
                     var a = moment(new Date(today_date));
                     var b = moment(new Date(rec.date));

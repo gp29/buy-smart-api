@@ -29,9 +29,9 @@ const add = function(requestParam,done){
     console.log(requestParam)
     requestParam.Product_Url = requestParam.Product_Url.split('|');
     async.forEachSeries(requestParam.Product_Url, async function(singleRec, callbackSingleRec) {
-        // let Product_key = await productHandler.getProductKeyExtract(singleRec)
-        // console.log(Product_key)
-        query.selectWithAndFilterOne(dbConstants.dbSchema.products, {Product_Url: singleRec}, {
+        let Product_key = await productHandler.getProductKeyExtract(singleRec)
+        console.log(Product_key)
+        query.selectWithAndFilterOne(dbConstants.dbSchema.products, {Product_key: Product_key}, {
             _id: 0,
             Product_key:1,
             category_id:1,

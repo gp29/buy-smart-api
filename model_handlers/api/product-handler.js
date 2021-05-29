@@ -154,7 +154,7 @@ const dataInsert = async(singleRec, code) => {
                 singleRec.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 singleRec.Price_arr = [{
                     date: moment(new Date()).format('YYYY-MM-DD'),
-                    price: parseFloat(singleRec.SellPrice)
+                    price: parseFloat((singleRec.SellPrice).match(/\d/g))
                 }]
                 let product = await query.insertSingle(dbConstants.dbSchema.products, singleRec);
                 client.set(singleRec.Img_key, product.Index);
@@ -200,7 +200,7 @@ const dataInsert = async(singleRec, code) => {
                 updateObj.SellPrice = singleRec.SellPrice;
                 /*if(singleRec.SellPrice && (singleRec.SellPrice!='' || singleRec.SellPrice!='null' || singleRec.SellPrice!='NULL')){
                 }*/
-                updateObj.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
+                updateObj.Discount = 100 - ((parseFloat((singleRec.SellPrice).match(/\d/g)) * 100) / parseFloat((singleRec.Mrp).match(/\d/g)));
                 /*if(singleRec.Discount && (singleRec.Discount!='' || singleRec.Discount!='null' || singleRec.Discount!='NULL')){
                 }*/
                 if(singleRec.Colour && (singleRec.Colour!='' || singleRec.Colour!='null' || singleRec.Colour!='NULL')){
@@ -226,8 +226,25 @@ const dataInsert = async(singleRec, code) => {
                 // FOR PRICE ARRAY
                 let product = await query.selectWithAndOne(dbConstants.dbSchema.products, { Index: parseFloat(res) }, { _id: 0, Price_arr:1} );
                 let price_arr = product ? product.Price_arr : [];
+
                 let today_date = moment(new Date()).format('YYYY-MM-DD')
-                let val = _.where(price_arr, {date: today_date})
+                let rec = price_arr.slice(-1)[0]
+                if(rec.price != parseFloat((singleRec.SellPrice).match(/\d/g))){
+                    price_arr.push({
+                        date: today_date,
+                        price: parseFloat((singleRec.SellPrice).match(/\d/g))
+                    })
+                    var a = moment(new Date(today_date));
+                    var b = moment(new Date(rec.date));
+                    let days = a.diff(b, 'days')
+                    if(days >= 20){
+                        if(price_arr.length > 0){
+                            price_arr.splice(0, 1)
+                        }
+                    }
+                }
+
+                /*let val = _.where(price_arr, {date: today_date})
                 if(val.length > 0){
                     _.each(price_arr, (elem) => {
                         if(elem.date == today_date){
@@ -250,7 +267,7 @@ const dataInsert = async(singleRec, code) => {
                             price_arr.splice(0, 1)
                         }
                     }
-                }
+                }*/
                 updateObj.Price_arr = price_arr
                 // DONE FOR ARRAY
 

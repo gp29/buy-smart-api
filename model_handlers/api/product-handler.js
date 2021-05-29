@@ -146,8 +146,6 @@ const dataInsert = async(singleRec, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             delete singleRec.Index;
-            console.log(singleRec.Mrp)
-            console.log(singleRec.SellPrice)
             if(!singleRec.Mrp){
                 singleRec.Mrp = singleRec.SellPrice
             }
@@ -155,9 +153,11 @@ const dataInsert = async(singleRec, code) => {
                 singleRec.SellPrice = singleRec.Mrp
             }
             singleRec.SellPrice = (singleRec.SellPrice).match(/\d/g)
+            singleRec.SellPrice = (singleRec.SellPrice).join("");
+
             singleRec.Mrp = (singleRec.Mrp).match(/\d/g)
-            console.log(singleRec.Mrp)
-            console.log(singleRec.SellPrice)
+            singleRec.Mrp = (singleRec.Mrp).join("");
+            
             singleRec.Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url)
 
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)

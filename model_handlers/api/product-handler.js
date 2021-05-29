@@ -157,13 +157,14 @@ const dataInsert = async(singleRec, code) => {
 
             singleRec.Mrp = (singleRec.Mrp).match(/\d/g)
             singleRec.Mrp = (singleRec.Mrp).join("");
-            
+
             singleRec.Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url)
 
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
             let res = await client.get(singleRec.Img_key);
             if(!res){
                 singleRec.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
+                singleRec.Discount = Math.ceil(singleRec.Discount)
                 singleRec.Price_arr = [{
                     date: moment(new Date()).format('YYYY-MM-DD'),
                     price: parseFloat(singleRec.SellPrice)
@@ -207,6 +208,7 @@ const dataInsert = async(singleRec, code) => {
                 /*if(singleRec.SellPrice && (singleRec.SellPrice!='' || singleRec.SellPrice!='null' || singleRec.SellPrice!='NULL')){
                 }*/
                 updateObj.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
+                updateObj.Discount = Math.ceil(updateObj.Discount)
                 /*if(singleRec.Discount && (singleRec.Discount!='' || singleRec.Discount!='null' || singleRec.Discount!='NULL')){
                 }*/
                 if(singleRec.Colour && (singleRec.Colour!='' || singleRec.Colour!='null' || singleRec.Colour!='NULL')){

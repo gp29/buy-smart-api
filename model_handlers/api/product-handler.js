@@ -146,8 +146,7 @@ const dataInsert = async(singleRec, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             delete singleRec.Index;
-            console.log(singleRec)
-            return false;
+            console.log(singleRec.Mrp)
             console.log(singleRec.SellPrice)
             if(!singleRec.Mrp){
                 singleRec.Mrp = singleRec.SellPrice

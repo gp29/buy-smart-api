@@ -65,6 +65,10 @@
                                     "device_token": {
                                         "type": "string",
                                         "description": "Optional"
+                                    },
+                                    "profile_picture": {
+                                        "type": "file",
+                                        "description": "Optional =>  pass as a multipart"
                                     }
                                 }
                             }

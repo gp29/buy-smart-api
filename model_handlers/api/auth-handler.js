@@ -8,18 +8,32 @@ const query = require('./../../utils/query-creator-api');
 let async = require('async');
 let _ = require('underscore');
 const User = require('./../../models/user');
+var mv = require('mv');
 
-const signin = async(requestParam) => {
+const signin = async(requestParam, req) => {
     return new Promise(async(resolve, reject) => {
         try {
             let response = await query.countRecord(dbConstants.dbSchema.users, { social_id: requestParam.social_id});
+            if(req.files){
+                if(req.files.profile_picture){
+                    requestParam.profile_picture = await new Promise((solve, reject) => {
+                        mv(req.files.profile_picture.path, './public/profile_picture/'+req.files.profile_picture.name, function(err) {
+                            if(err){
+                                reject(errors.internalServer(true, requestParam.code));
+                                return;
+                            }
+                            solve(req.files.profile_picture.name)
+                        });
+                    });
+                }
+            }
             if(response == 0){
                 await query.insertSingle(dbConstants.dbSchema.users, requestParam);
             }
             else{
                 await query.updateSingle(dbConstants.dbSchema.users, requestParam, { social_id: requestParam.social_id});
             }
-            resolve(profile({ social_id: requestParam.social_id }, requestParam.code));
+            resolve(profile({ social_id: requestParam.social_id }, req, requestParam.code));
             return;
         } catch (error) {
             console.log(error)
@@ -77,15 +91,19 @@ const contactus = async(requestParam) => {
 };
 
 
-const profile = async(columnAndValues, code) => {
+const profile = async(columnAndValues, req, code) => {
     return new Promise(async(resolve, reject) => {
         try {
+            let fullUrl = req.protocol + '://' + req.get('host');
             let response = await query.selectWithAndOne(dbConstants.dbSchema.users, columnAndValues, { _id: 0, created_at:0, updated_at:0, __v:0} );
             if(!response){
                 reject(errors.userNotFound(true, code));
                 return;
             }
             response = JSON.parse(JSON.stringify(response))
+            if(response.profile_picture && response.profile_picture!=''){
+                response.profile_picture = fullUrl+'/profile_picture/'+response.profile_picture;
+            }
             if(response.mobile_country_code !=='' && response.mobile !==''){
                 response.is_mobile_exists = true;
             }

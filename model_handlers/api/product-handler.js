@@ -368,12 +368,12 @@ const getAds = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             let adArr = [];
-            //let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
-            //let res = await client2.get(key);
-            //if(res){
-                let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_Url: requestParam.Product_Url}, { _id: 0, category_id:1} );
+            let key = await productHandler.getProductKeyExtract(requestParam.Product_Url);
+            let res = await client2.get(key);
+            if(res){
+                let product = await query.selectWithAndOne(dbConstants.dbSchema.products, {Product_key: res}, { _id: 0, category_id:1} );
                 let getAdColumn = {};
-                if(product.category_id !=''){
+                if(product && product.category_id !=''){
                     getAdColumn.category_id = product.category_id
                 }
                 let ads = await query.selectWithAndFilter(dbConstants.dbSchema.ads, getAdColumn, {
@@ -410,7 +410,7 @@ const getAds = async(requestParam, code) => {
                     }, {created_at:-1}, {});
                     adArr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(defaultads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
                 }
-            //}
+            }
             resolve(adArr)
             return
         } catch (error) {

@@ -144,7 +144,7 @@ const getProductKeyExtract = async (url) => {
         try {
             let finalString;
             if(url.includes('amazon.in') == true){
-                finalString = "AM" + url.split('/')[4]
+                finalString = "AM" + url.split('/')[5].split('?')[0]
             }
             else if(url.includes('flipkart.com') == true){
                 if(url.split('/')[6] == undefined){
@@ -233,6 +233,7 @@ const getProductKeyExtract = async (url) => {
             else if(url.includes('firstcry.com') == true){
                 url = url.split('/')
                 finalString = "FC" + url.slice(-2, -1)[0]
+                finalString = finalString.split('?')[0]
             }
             else{
                 finalString = /[^\\\/:*?"<>|\r\n]+$/i.exec(singleRec.Product_Url)[0]

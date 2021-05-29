@@ -150,6 +150,8 @@ const dataInsert = async(singleRec, code) => {
 
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
             let res = await client.get(singleRec.Img_key);
+            console.log(singleRec)
+            console.log(res)
             if(!res){
                 singleRec.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 singleRec.Price_arr = [{

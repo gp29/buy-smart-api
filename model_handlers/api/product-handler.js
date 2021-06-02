@@ -195,7 +195,7 @@ const dataInsert = async(singleRec, code) => {
                 }]
                 let product = await query.insertSingle(dbConstants.dbSchema.products, singleRec);
                 client.set(singleRec.Img_key, product.Index);
-                resolve({});
+                resolve(singleRec);
                 return;
             }
             else{
@@ -313,7 +313,7 @@ const dataInsert = async(singleRec, code) => {
 
                 await query.updateSingle(dbConstants.dbSchema.products, updateObj, { Index: parseFloat(res) });
                 await query.updateMultiple(dbConstants.dbSchema.results, updateObj, { Index: parseFloat(res) });
-                resolve({});
+                resolve(updateObj);
                 return;
             }
         } catch (error) {
@@ -346,13 +346,26 @@ const dataInsertAndroid = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             requestParam.data = JSON.parse(requestParam.data)
-            asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
-                let res = await dataInsert(singleRec);
-                callbackSingleRec();
-            }, function(){
-            });
-            resolve({});
-            return;
+            if(requestParam.is_get_response_back && requestParam.is_get_response_back == true){
+                let arr = []
+                asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
+                    let res = await dataInsert(singleRec);
+                    arr.push(res)
+                    callbackSingleRec();
+                }, function(){
+                    resolve(arr);
+                    return;
+                });
+            }
+            else{
+                asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {
+                    let res = await dataInsert(singleRec);
+                    callbackSingleRec();
+                }, function(){
+                });
+                resolve({});
+                return;
+            }
         } catch (error) {
             console.log(error);
             reject(error)
@@ -447,13 +460,13 @@ const getAds = async(requestParam, code) => {
                 // });
                 displayProducts.push(cateArr)
                 adArr = _.flatten(displayProducts);
-                if(adArr.length == 0){
-                    let defaultads = await query.selectWithAndFilter(dbConstants.dbSchema.default_ads, {}, {
-                        _id: 0,
-                        Index:1
-                    }, {created_at:-1}, {});
-                    adArr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(defaultads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
-                }
+            }
+            if(adArr.length == 0){
+                let defaultads = await query.selectWithAndFilter(dbConstants.dbSchema.default_ads, {}, {
+                    _id: 0,
+                    Index:1
+                }, {created_at:-1}, {});
+                adArr = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: _.pluck(defaultads, 'Index')}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
             }
             resolve(adArr)
             return

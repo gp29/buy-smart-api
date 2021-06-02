@@ -23,6 +23,7 @@ const list = async(req, code) => {
             let response = await query.selectWithAndFilter(dbConstants.dbSchema.scraps, {}, {
                 _id: 0,
                 scrap_id:1,
+                url_type:1,
                 url:1
             }, {created_at:-1}, {
                 skip,
@@ -30,8 +31,7 @@ const list = async(req, code) => {
             });
             if(response.length > 0){
                 insertTempRecord(response);
-                response = _.pluck(response, 'url')
-                await query.removeMultiple(dbConstants.dbSchema.scraps, {'url': {$in: response}}); 
+                await query.removeMultiple(dbConstants.dbSchema.scraps, {'url': {$in: _.pluck(response, 'url')}}); 
             }
             resolve(response);
             return;
@@ -63,9 +63,9 @@ const insertTempRecord = async(requestParam) => {
 const insert = async(requestParam) => {
     return new Promise(async(resolve, reject) => {
         try {
-            requestParam.url = requestParam.url.split(',');
+            requestParam.url = JSON.parse(requestParam.url)
             asyncLoop.forEachSeries(requestParam.url, async function(singleRec, callbackSingleRec) {
-                await query.insertSingle(dbConstants.dbSchema.scraps, {url:singleRec});
+                await query.insertSingle(dbConstants.dbSchema.scraps, {url:singleRec.url, url_type:singleRec.url_type});
                 callbackSingleRec();
             }, function(){
                 resolve({});
@@ -84,7 +84,7 @@ const scrapDoneOrNot = async(requestParam) => {
         try {
             await query.removeMultiple(dbConstants.dbSchema.temp_scraps, {'url': {$in: [requestParam.url]}}); 
             if(requestParam.done == 'no'){
-                await query.insertSingle(dbConstants.dbSchema.scraps, {url: requestParam.url});
+                await query.insertSingle(dbConstants.dbSchema.scraps, {url: requestParam.url, url_type:requestParam.url_type});
             }
             if(requestParam.html_string && requestParam.html_string!=''){
                 let fileName = entropy.smallID()+'.txt'

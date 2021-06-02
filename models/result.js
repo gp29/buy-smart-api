@@ -91,6 +91,10 @@ var resultSchema = new Schema({
         type: Number,
         default:0
     },
+    Price_arr: {
+        type: Array,
+        default:[]
+    },
     created_at: {
         type: Date,
         default: Date.now

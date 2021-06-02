@@ -11,6 +11,10 @@ var scrapSchema = new Schema({
         type: String,
         default: ''
     },
+    url_type: {
+        type: String,
+        default: ''
+    },
     created_at: {
         type: Date,
         default: Date.now

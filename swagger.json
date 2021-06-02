@@ -627,6 +627,9 @@
                                 "properties": {
                                     "data": {
                                         "type": "array"
+                                    },
+                                    "is_get_response_back": {
+                                        "type": "boolean"
                                     }
                                 }
                             }
@@ -794,7 +797,7 @@
                                 "properties": {
                                     "url": {
                                         "type": "string",
-                                        "description": "Pass  Multiple comma seperate like 1,2,3"
+                                        "description": "Pass  Multiple [{url:dasdsa, url_type:1},{url:dasdsa, url_type:1}]"
                                     }
                                 }
                             }
@@ -832,6 +835,9 @@
                                 "type": "object",
                                 "properties": {
                                     "url": {
+                                        "type": "string"
+                                    },
+                                    "url_type": {
                                         "type": "string"
                                     },
                                     "done": {

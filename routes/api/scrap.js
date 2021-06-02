@@ -47,7 +47,7 @@ router.post('/insert-background-scrap-url', async(req, res) => {
 router.post('/scrap-done-or-not', async(req, res) => {
     req.body.code = 'EN';
     try {
-        if (req.body.url && req.body.done) {
+        if (req.body.url && req.body.url_type && req.body.done) {
             let response = await scrapHandler.scrapDoneOrNot(req.body);
             jsonResponse(res, responseCodes.OK, errors.noError(), response);
         } else {

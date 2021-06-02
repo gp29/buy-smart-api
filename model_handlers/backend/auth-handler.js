@@ -129,19 +129,45 @@ const sendNotification = async function(requestParam, req, done) {
         device_token:1,
         name:1,
         _id: 0
-    }, function(error, users) {
+    }, async function(error, users) {
         if (error) {
             done(errors.internalServer(true));
             return;
         }
-        mv(req.files.small_icon.path, './public/notification/'+req.files.small_icon.name, function(err) {
-            requestParam.small_icon = fullUrl+'/notification/'+req.files.small_icon.name;
-            mv(req.files.big_icon.path, './public/notification/'+req.files.big_icon.name, function(err) {
-                requestParam.big_icon = fullUrl+'/notification/'+req.files.big_icon.name;
-                sendNotificationUser(requestParam, users);
-                done(null, {})
-            });
-        });
+        requestParam.btn_text = requestParam.btn_text ? requestParam.btn_text : ''
+        requestParam.btn_url = requestParam.btn_url ? requestParam.btn_url : ''
+        if(req.files){
+            if(req.files.small_icon){
+                requestParam.small_icon = await new Promise((resolve, reject) => {
+                    mv(req.files.small_icon.path, './public/notification/'+req.files.small_icon.name, function(err) {
+                        resolve(fullUrl+'/notification/'+req.files.small_icon.name)
+                    });
+                });
+            }
+            if(req.files.big_icon){
+                requestParam.big_icon = await new Promise((resolve, reject) => {
+                    mv(req.files.big_icon.path, './public/notification/'+req.files.big_icon.name, function(err) {
+                        resolve(fullUrl+'/notification/'+req.files.big_icon.name)
+                    });
+                });
+            }
+            sendNotificationUser(requestParam, users);
+            done(null, {})
+            /*mv(req.files.small_icon.path, './public/notification/'+req.files.small_icon.name, function(err) {
+                requestParam.small_icon = fullUrl+'/notification/'+req.files.small_icon.name;
+                mv(req.files.big_icon.path, './public/notification/'+req.files.big_icon.name, function(err) {
+                    requestParam.big_icon = fullUrl+'/notification/'+req.files.big_icon.name;
+                    sendNotificationUser(requestParam, users);
+                    done(null, {})
+                });
+            });*/
+        }
+        else{
+            requestParam.small_icon = ''
+            requestParam.big_icon = ''
+            sendNotificationUser(requestParam, users);
+            done(null, {})
+        }
     });
 };
 
@@ -161,6 +187,8 @@ const sendNotificationUser = (requestParam, users, done) => {
                 metadata: requestParam.metadata,
                 small_icon: requestParam.small_icon,
                 big_icon: requestParam.big_icon,
+                btn_text: requestParam.btn_text,
+                btn_url: requestParam.btn_url,
             }
         };
         fcm.send(message, function(error, response) {

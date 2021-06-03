@@ -363,7 +363,7 @@ const dataInsertAndroid = async(requestParam, code) => {
                     callbackSingleRec();
                 }, function(){
                 });
-                resolve({});
+                resolve([]);
                 return;
             }
         } catch (error) {

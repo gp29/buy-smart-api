@@ -162,11 +162,12 @@ const dataInsert = async(singleRec, code) => {
             let SellPrice = singleRec.SellPrice.split('.')
             if(SellPrice.length > 1){
                 SellPrice[0] = (SellPrice[0]).match(/\d/g)
-                SellPrice[0] = (SellPrice[0]).join("");
-
+                if(SellPrice[0]){
+                    SellPrice[0] = (SellPrice[0]).join("");
+                }
                 SellPrice[1] = (SellPrice[1]).match(/\d/g)
                 SellPrice[1] = (SellPrice[1]).join("");
-                singleRec.SellPrice = SellPrice[0]+'.'+SellPrice[1]
+                singleRec.SellPrice = SellPrice[0] ? SellPrice[0]+'.'+SellPrice[1] : SellPrice[1]
             }
             else{
                 SellPrice[0] = (SellPrice[0]).match(/\d/g)
@@ -177,11 +178,13 @@ const dataInsert = async(singleRec, code) => {
             let Mrp = singleRec.Mrp.split('.')
             if(Mrp.length > 1){
                 Mrp[0] = (Mrp[0]).match(/\d/g)
-                Mrp[0] = (Mrp[0]).join("");
+                if(Mrp[0]){
+                    Mrp[0] = (Mrp[0]).join("");
+                }
 
                 Mrp[1] = (Mrp[1]).match(/\d/g)
                 Mrp[1] = (Mrp[1]).join("");
-                singleRec.Mrp = Mrp[0]+'.'+Mrp[1]
+                singleRec.Mrp = Mrp[0] ? Mrp[0]+'.'+Mrp[1] : Mrp[1]
             }
             else{
                 Mrp[0] = (Mrp[0]).match(/\d/g)
@@ -193,7 +196,6 @@ const dataInsert = async(singleRec, code) => {
 
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
             let res = await client.get(singleRec.Img_key);
-            console.log(res)
             if(!res){
                 singleRec.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 singleRec.Discount = Math.floor(singleRec.Discount)

@@ -15,8 +15,7 @@ function CheckUrl(req, res, next) {
         true :
         false;
     if (!is_free_auth) {
-        //ensureAuthorized(req, res, next);
-        next();
+        ensureAuthorized(req, res, next);
     } else {
         next();
     }

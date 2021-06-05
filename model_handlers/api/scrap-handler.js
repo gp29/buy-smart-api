@@ -83,22 +83,24 @@ const scrapDoneOrNot = async(requestParam) => {
     return new Promise(async(resolve, reject) => {
         try {
             await query.removeMultiple(dbConstants.dbSchema.temp_scraps, {'url': {$in: [requestParam.url]}}); 
-            if(requestParam.done == 'no'){
-                await query.insertSingle(dbConstants.dbSchema.scraps, {url: requestParam.url, url_type:requestParam.url_type});
-            }
-            if(requestParam.html_string && requestParam.html_string!=''){
-                let fileName = entropy.smallID()+'.txt'
-                fs.writeFile('./public/files/'+fileName, requestParam.html_string, function(err) {
-                    if(err) {
-                        console.log('Error: can not write file ');
-                        reject(errors.internalServer(true, requestParam.code));
-                        return;
-                    }
+            // if(requestParam.done == 'no'){
+            //     await query.insertSingle(dbConstants.dbSchema.scraps, {url: requestParam.url, url_type:requestParam.url_type});
+            // }
+            if(requestParam.done == 'yes'){
+                if(requestParam.html_string && requestParam.html_string!=''){
+                    let fileName = entropy.smallID()+'.txt'
+                    fs.writeFile('./public/files/'+fileName, requestParam.html_string, function(err) {
+                        if(err) {
+                            console.log('Error: can not write file ');
+                            reject(errors.internalServer(true, requestParam.code));
+                            return;
+                        }
+                        resolve({})
+                    }); 
+                }
+                else{
                     resolve({})
-                }); 
-            }
-            else{
-                resolve({})
+                }
             }
         } catch (error) {
             console.log(error)

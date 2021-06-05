@@ -51,7 +51,7 @@ router.post('/update-device-token', middleware, async(req, res) => {
     }
 });
 
-router.post('/logout', middleware, async(req, res) => {
+router.post('/logout', async(req, res) => {
     req.body.code = 'EN';
     try {
         if (req.body.user_id) {

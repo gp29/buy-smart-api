@@ -6,8 +6,10 @@ const errors = require('./../../utils/dz-errors-api');
 const express = require('express');
 const router = express.Router();
 const reportHandler = require('./../../model_handlers/api/report-handler');
+var middleAuth = require("../../utils/middleware");
+var middleware = [middleAuth.CheckUrl];
 
-router.get('/category-list', async(req, res) => {
+router.get('/category-list', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         let response = await reportHandler.categoryList(req, req.query.code);
@@ -23,7 +25,7 @@ router.get('/category-list', async(req, res) => {
     }
 });
 
-router.post('/user-send-report', async(req, res) => {
+router.post('/user-send-report', middleware, async(req, res) => {
     req.body.code = 'EN';
     try {
         if (req.body.user_id && req.body.report_category_id && req.body.message && req.body.result_id) {

@@ -16,6 +16,7 @@ module.exports = {
 	base_url:'http://143.110.249.142:3001/',
 	appName: 'Buy Smart',
 	port: '3001',
+	jwtSecret: 'buysmart@lRYqXDXZG',
 	mode: 'development',
 	push_server_key: 'AAAAztvlt9M:APA91bEEEX2E8nSr2EeBG1ZhinA7ON1977Bc-er9vu-TWc77DjVD2Qlx73yqhhrssvRyJknazC2OSh7X0M6on4El55ZD25bjHUjTUa1wAJk0GAd08oDbmvvYGBE5mVL1f7yp9zkCunAP',
 	firebase:{

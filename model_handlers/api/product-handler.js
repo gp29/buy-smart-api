@@ -193,6 +193,7 @@ const dataInsert = async(singleRec, code) => {
 
             singleRec.Img_key = await productHandler.getImageKeyExtract(singleRec.Img_url)
             let res = await client.get(singleRec.Img_key);
+            console.log(res)
             if(!res){
                 singleRec.Discount = 100 - ((parseFloat(singleRec.SellPrice) * 100) / parseFloat(singleRec.Mrp));
                 singleRec.Discount = Math.floor(singleRec.Discount)
@@ -352,10 +353,12 @@ const dataInsertPost = async(requestParam, code) => {
     })
 };
 
+
 const dataInsertAndroid = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             requestParam.data = JSON.parse(requestParam.data)
+            console.log(requestParam.data)
             if(requestParam.is_get_response_back && requestParam.is_get_response_back == true){
                 let arr = []
                 asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {

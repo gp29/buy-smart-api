@@ -10,15 +10,20 @@
             "url": "/"
         }
     },
+    "security": [
+        {
+            "bearerAuth": {}
+        }
+    ],
+    "produces": [
+        "application/json"
+    ],
     "paths": {
         "/auth/sign-in": {
             "post": {
                 "x-controller-name": "AuthController",
                 "x-operation-name": "Signin",
                 "tags": ["AuthController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "Signin",
@@ -83,9 +88,6 @@
                 "x-controller-name": "AuthController",
                 "x-operation-name": "UpdateDeviceToken",
                 "tags": ["AuthController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "UpdateDeviceToken",
@@ -124,9 +126,6 @@
                 "x-controller-name": "AuthController",
                 "x-operation-name": "logout",
                 "tags": ["AuthController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "logout",
@@ -162,9 +161,6 @@
                 "x-controller-name": "AuthController",
                 "x-operation-name": "ContactUs",
                 "tags": ["AuthController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "ContactUs",
@@ -193,9 +189,6 @@
                 "x-controller-name": "AuthController",
                 "x-operation-name": "LottieAnimation",
                 "tags": ["AuthController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "LottieAnimation",
@@ -224,9 +217,6 @@
                 "x-controller-name": "AuthController",
                 "x-operation-name": "AboutUs",
                 "tags": ["AuthController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "AboutUs",
@@ -255,9 +245,6 @@
                 "x-controller-name": "AuthController",
                 "x-operation-name": "offer",
                 "tags": ["AuthController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "offer",
@@ -294,9 +281,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "Feed",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "Feed",
@@ -331,9 +315,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "TrandingFeed",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "TrandingFeed",
@@ -362,9 +343,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "GetResults",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "GetResults",
@@ -400,9 +378,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "CacheResults",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "CacheResults",
@@ -437,9 +412,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "AdsResult",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "AdsResult",
@@ -474,9 +446,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "ImageKey",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "ImageKey",
@@ -511,9 +480,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "ProductKey",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "ProductKey",
@@ -548,9 +514,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "DataInserter",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "DataInserter",
@@ -603,9 +566,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "DataInserterPost",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "DataInserterPost",
@@ -641,9 +601,6 @@
                 "x-controller-name": "ProductController",
                 "x-operation-name": "DataInserterAndroid",
                 "tags": ["ProductController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "DataInserterAndroid",
@@ -683,9 +640,6 @@
                 "x-controller-name": "BannerController",
                 "x-operation-name": "List",
                 "tags": ["BannerController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "List",
@@ -709,9 +663,6 @@
                 "x-controller-name": "ReportController",
                 "x-operation-name": "CategoryList",
                 "tags": ["ReportController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "CategoryList",
@@ -734,9 +685,6 @@
                 "x-controller-name": "ReportController",
                 "x-operation-name": "UserSendReport",
                 "tags": ["ReportController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "UserSendReport",
@@ -786,9 +734,6 @@
                 "x-controller-name": "ScrapController",
                 "x-operation-name": "List",
                 "tags": ["ScrapController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "List",
@@ -811,9 +756,6 @@
                 "x-controller-name": "ScrapController",
                 "x-operation-name": "InsertUrl",
                 "tags": ["ScrapController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "InsertUrl",
@@ -850,9 +792,6 @@
                 "x-controller-name": "ScrapController",
                 "x-operation-name": "ScrapDOneOrNot",
                 "tags": ["ScrapController"],
-                "security": [{
-                    "jwt": []
-                }],
                 "responses": {
                     "200": {
                         "description": "ScrapDOneOrNot",
@@ -895,7 +834,15 @@
             }
         }
     },
-    "components": {},
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
     "servers": [{
         "url": "http://143.110.249.142:3001/api"
     }, {

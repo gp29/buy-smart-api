@@ -6,6 +6,8 @@ const errors = require('./../../utils/dz-errors-api');
 const express = require('express');
 const router = express.Router();
 const authHandler = require('./../../model_handlers/api/auth-handler');
+var middleAuth = require("../../utils/middleware");
+var middleware = [middleAuth.CheckUrl];
 
 router.post('/sign-in', async(req, res) => {
     req.body.code = 'EN';
@@ -28,7 +30,7 @@ router.post('/sign-in', async(req, res) => {
     }
 });
 
-router.post('/update-device-token', async(req, res) => {
+router.post('/update-device-token', middleware, async(req, res) => {
     req.body.code = 'EN';
     try {
         if (req.body.user_id && req.body.device_token) {
@@ -49,7 +51,7 @@ router.post('/update-device-token', async(req, res) => {
     }
 });
 
-router.post('/logout', async(req, res) => {
+router.post('/logout', middleware, async(req, res) => {
     req.body.code = 'EN';
     try {
         if (req.body.user_id) {
@@ -70,7 +72,7 @@ router.post('/logout', async(req, res) => {
     }
 });
 
-router.get('/get-lottie-animation', async(req, res) => {
+router.get('/get-lottie-animation',middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id) {
@@ -91,7 +93,7 @@ router.get('/get-lottie-animation', async(req, res) => {
     }
 });
 
-router.get('/contact-us', async(req, res) => {
+router.get('/contact-us', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id) {
@@ -112,7 +114,7 @@ router.get('/contact-us', async(req, res) => {
     }
 });
 
-router.get('/get-about-us-content', async(req, res) => {
+router.get('/get-about-us-content', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id) {
@@ -134,7 +136,7 @@ router.get('/get-about-us-content', async(req, res) => {
     }
 });
 
-router.get('/get-offer', async(req, res) => {
+router.get('/get-offer', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id) {

@@ -6,8 +6,10 @@ const errors = require('./../../utils/dz-errors-api');
 const express = require('express');
 const router = express.Router();
 const bannerHandler = require('./../../model_handlers/api/banner-handler');
+var middleAuth = require("../../utils/middleware");
+var middleware = [middleAuth.CheckUrl];
 
-router.get('/list', async(req, res) => {
+router.get('/list', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         let response = await bannerHandler.list(req, req.query.code);

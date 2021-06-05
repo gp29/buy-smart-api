@@ -6,8 +6,10 @@ const errors = require('./../../utils/dz-errors-api');
 const express = require('express');
 const router = express.Router();
 const productHandler = require('./../../model_handlers/api/product-handler');
+var middleAuth = require("../../utils/middleware");
+var middleware = [middleAuth.CheckUrl];
 
-router.get('/get-results', async(req, res) => {
+router.get('/get-results', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id && req.query.img_urls) {
@@ -28,7 +30,7 @@ router.get('/get-results', async(req, res) => {
     }
 });
 
-router.get('/get-image-key', async(req, res) => {
+router.get('/get-image-key', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id && req.query.Img_url) {
@@ -49,7 +51,7 @@ router.get('/get-image-key', async(req, res) => {
     }
 });
 
-router.get('/get-product-key', async(req, res) => {
+router.get('/get-product-key', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id && req.query.Product_Url) {
@@ -71,7 +73,7 @@ router.get('/get-product-key', async(req, res) => {
 });
 
 
-router.get('/data-insert', async(req, res) => {
+router.get('/data-insert', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.Host && req.query.Product_Title && req.query.Product_Url && req.query.Img_url && req.query.SellPrice) {
@@ -92,7 +94,7 @@ router.get('/data-insert', async(req, res) => {
     }
 });
 
-router.post('/data-insert-post', async(req, res) => {
+router.post('/data-insert-post', middleware, async(req, res) => {
     req.body.code = 'EN';
     try {
         let response = await productHandler.dataInsertPost(req.body, req.body.code);
@@ -108,7 +110,7 @@ router.post('/data-insert-post', async(req, res) => {
     }
 });
 
-router.post('/data-insert-android', async(req, res) => {
+router.post('/data-insert-android', middleware, async(req, res) => {
     req.body.code = 'EN';
     try {
         let response = await productHandler.dataInsertAndroid(req.body, req.body.code);
@@ -124,7 +126,7 @@ router.post('/data-insert-android', async(req, res) => {
     }
 });
 
-router.get('/get-cache-results', async(req, res) => {
+router.get('/get-cache-results', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id && req.query.Product_Url) {
@@ -145,7 +147,7 @@ router.get('/get-cache-results', async(req, res) => {
     }
 });
 
-router.get('/get-ads', async(req, res) => {
+router.get('/get-ads', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id && req.query.Product_Url) {
@@ -166,7 +168,7 @@ router.get('/get-ads', async(req, res) => {
     }
 });
 
-router.get('/feed', async(req, res) => {
+router.get('/feed', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id || req.query.page) {
@@ -187,7 +189,7 @@ router.get('/feed', async(req, res) => {
     }
 });
 
-router.get('/tranding-feed', async(req, res) => {
+router.get('/tranding-feed', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         if (req.query.user_id) {

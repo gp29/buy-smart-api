@@ -9,6 +9,7 @@ let async = require('async');
 let _ = require('underscore');
 const User = require('./../../models/user');
 var mv = require('mv');
+var jwt = require("jsonwebtoken");
 
 const signin = async(requestParam, req) => {
     return new Promise(async(resolve, reject) => {
@@ -33,7 +34,13 @@ const signin = async(requestParam, req) => {
             else{
                 await query.updateSingle(dbConstants.dbSchema.users, requestParam, { social_id: requestParam.social_id});
             }
-            resolve(profile({ social_id: requestParam.social_id }, req, requestParam.code));
+            let jwtAccessToken = jwt.sign({social_id: requestParam.social_id}, config.jwtSecret, {
+                expiresIn: "7d", // expiration duration 7 day
+            });
+            resolve(profile({ 
+                social_id: requestParam.social_id,
+                accessToken:jwtAccessToken, 
+            }, req, requestParam.code));
             return;
         } catch (error) {
             console.log(error)
@@ -91,11 +98,11 @@ const contactus = async(requestParam) => {
 };
 
 
-const profile = async(columnAndValues, req, code) => {
+const profile = async(requestParam, req, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             let fullUrl = req.protocol + '://' + req.get('host');
-            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, columnAndValues, { _id: 0, created_at:0, updated_at:0, __v:0} );
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {social_id: requestParam.social_id}, { _id: 0, created_at:0, updated_at:0, __v:0} );
             if(!response){
                 reject(errors.userNotFound(true, code));
                 return;
@@ -109,6 +116,10 @@ const profile = async(columnAndValues, req, code) => {
             }
             else{
                 response.is_mobile_exists = false;
+            }
+            if(requestParam.accessToken){
+                response = JSON.parse(JSON.stringify(response));
+                response.accessToken = requestParam.accessToken;
             }
             resolve(response)
             return

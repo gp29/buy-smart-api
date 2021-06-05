@@ -6,8 +6,10 @@ const errors = require('./../../utils/dz-errors-api');
 const express = require('express');
 const router = express.Router();
 const scrapHandler = require('./../../model_handlers/api/scrap-handler');
+var middleAuth = require("../../utils/middleware");
+var middleware = [middleAuth.CheckUrl];
 
-router.get('/get-background-scrap-list', async(req, res) => {
+router.get('/get-background-scrap-list', middleware, async(req, res) => {
     req.query.code = 'EN';
     try {
         let response = await scrapHandler.list(req, req.query.code);
@@ -23,7 +25,7 @@ router.get('/get-background-scrap-list', async(req, res) => {
     }
 });
 
-router.post('/insert-background-scrap-url', async(req, res) => {
+router.post('/insert-background-scrap-url', middleware, async(req, res) => {
     req.body.code = 'EN';
     try {
         if (req.body.url) {
@@ -44,7 +46,7 @@ router.post('/insert-background-scrap-url', async(req, res) => {
     }
 });
 
-router.post('/scrap-done-or-not', async(req, res) => {
+router.post('/scrap-done-or-not', middleware, async(req, res) => {
     req.body.code = 'EN';
     try {
         if (req.body.url && req.body.url_type && req.body.done) {

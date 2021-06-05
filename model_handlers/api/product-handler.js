@@ -360,7 +360,6 @@ const dataInsertAndroid = async(requestParam, code) => {
     return new Promise(async(resolve, reject) => {
         try {
             requestParam.data = JSON.parse(requestParam.data)
-            console.log(requestParam.data)
             if(requestParam.is_get_response_back && requestParam.is_get_response_back == true){
                 let arr = []
                 asyncLoop.forEachSeries(requestParam.data, async function(singleRec, callbackSingleRec) {

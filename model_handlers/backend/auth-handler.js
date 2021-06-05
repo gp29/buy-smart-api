@@ -153,6 +153,7 @@ const sendNotification = async function(requestParam, req, done) {
                     });
                 });
             }
+            console.log(requestParam)
             sendNotificationUser(requestParam, users);
             done(null, {})
             /*mv(req.files.small_icon.path, './public/notification/'+req.files.small_icon.name, function(err) {

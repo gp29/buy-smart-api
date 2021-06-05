@@ -318,6 +318,8 @@ const dataInsert = async(singleRec, code) => {
                 updateObj.Price_arr = price_arr
                 // DONE FOR ARRAY
 
+                updateObj.Other3 = singleRec.Other3 ? singleRec.Other3 : ''
+
                 await query.updateSingle(dbConstants.dbSchema.products, updateObj, { Index: parseFloat(res) });
                 await query.updateMultiple(dbConstants.dbSchema.results, updateObj, { Index: parseFloat(res) });
                 let back_product = await query.selectWithAndOne(dbConstants.dbSchema.products, { Index: parseFloat(res) }, { _id: 0, created_at:0, updated_at:0, __v:0} );

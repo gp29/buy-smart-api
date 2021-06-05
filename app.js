@@ -31,6 +31,7 @@ const settings = require('./routes/backend/settings');
 const ad = require('./routes/backend/ad');
 const defaultAd = require('./routes/backend/default');
 const about = require('./routes/backend/about');
+const offer = require('./routes/backend/offer');
 
 // FOR API
 const authAPI = require('./routes/api/auth');
@@ -77,6 +78,7 @@ app.use('/backend/settings', settings);
 app.use('/backend/ad', ad);
 app.use('/backend/default', defaultAd);
 app.use('/backend/about', about);
+app.use('/backend/offer', offer);
 
 // FOR API
 app.use('/api/auth', authAPI);

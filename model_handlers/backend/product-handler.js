@@ -12,12 +12,18 @@ let fs = require('fs');
 const product = require('./../../models/product');
 
 const redis = require("redis");
+const util = require('util');
 
 //FOR IMAGE/PRODUCT KEY
 const client = redis.createClient("redis://127.0.0.1:6379/0");
 client.on("error", function(error) {
     console.error("redis err: ",error);
 });
+
+//FOR GET RESULTS
+const client2 = redis.createClient("redis://127.0.0.1:6379/1");
+client2.get = util.promisify(client2.get);
+
 
 const get = function(requestParam, done){
 	let page = requestParam.page ? requestParam.page : 0;
@@ -294,11 +300,14 @@ const removeKeyFromRedis = (requestParam,done) => {
         }
     }, {
         _id: 0,
-        Img_key:1
+        Img_key:1,
+        Product_key:1,
     }, {_id:-1}, {}, async (error, response) => {
         async.forEachSeries(response, async function(singleRec, callbackSingleRec) {
             client.del(singleRec.Img_key, function(err, res) {
-                callbackSingleRec();
+                client2.del(singleRec.Product_key, function(err, res) {
+                    callbackSingleRec();
+                });
             });
         }, function(){
             return false;

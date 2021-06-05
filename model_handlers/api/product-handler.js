@@ -89,6 +89,13 @@ const insertResultData = async(products) => {
                     singleRec = JSON.parse(JSON.stringify(singleRec));
                     singleRec.result_id = ID;
                     let result = await query.insertSingle(dbConstants.dbSchema.results, singleRec);
+                    let res = await client2.get(singleRec.Product_key)
+                    if(res){
+                        let response = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: res}, { _id: 0, Product_key:1} );
+                        _.each(response, (elem) => {
+                            client2.set(elem.Product_key, ID);
+                        })
+                    }
                     client2.set(singleRec.Product_key, ID);
                     callbackSingleRec();
                 }, function(){

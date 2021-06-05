@@ -250,6 +250,37 @@
                 "operationId": "AuthController.AboutUs"
             }
         },
+        "/auth/get-offer": {
+            "get": {
+                "x-controller-name": "AuthController",
+                "x-operation-name": "offer",
+                "tags": ["AuthController"],
+                "security": [{
+                    "jwt": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "offer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [{
+                    "name": "user_id",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "operationId": "AuthController.offer"
+            }
+        },
 
         "/product/feed": {
             "get": {

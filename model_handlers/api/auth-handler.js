@@ -173,6 +173,44 @@ const aboutus = async(req, requestParam) => {
     })
 };
 
+const offer = async(requestParam, req) => {
+    let fullUrl = req.protocol + '://' + req.get('host');
+    return new Promise(async(resolve, reject) => {
+        try {
+            let response = await query.selectWithAndOne(dbConstants.dbSchema.users, {user_id: requestParam.user_id}, { _id: 0, user_id:1} );
+            if(!response){
+                reject(errors.userNotFound(true, requestParam.code));
+                return;
+            }
+            let columnAndValues = {};
+            if(requestParam.host){
+                columnAndValues.host = requestParam.host
+            }
+            let obj = {}
+            let offers = await query.selectWithAnd(dbConstants.dbSchema.offers, columnAndValues, { _id: 0, created_at:0, updated_at:0, __v:0} );
+            _.each(offers, (elem) => {
+                elem.banner = fullUrl+'/banner/'+elem.banner;
+                let keys = Object.keys(obj)
+                if(keys.includes(elem.host) == true){
+                    let arr = obj[elem.host]
+                    arr.push(elem);
+                    arr = _.flatten(arr)
+                    obj[elem.host] = arr
+                }
+                else{
+                    obj[elem.host] = [elem]
+                }
+            })
+            resolve(obj);
+            return;
+        } catch (error) {
+            console.log(error)
+            reject(error)
+            return
+        }
+    })
+};
+
 
 module.exports = {
     signin,
@@ -181,5 +219,6 @@ module.exports = {
     updateDeviceToken,
     logout,
     contactus,
-    aboutus
+    aboutus,
+    offer
 };

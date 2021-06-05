@@ -136,6 +136,8 @@ const sendNotification = async function(requestParam, req, done) {
         }
         requestParam.btn_text = requestParam.btn_text ? requestParam.btn_text : ''
         requestParam.btn_url = requestParam.btn_url ? requestParam.btn_url : ''
+        requestParam.small_icon = ''
+        requestParam.big_icon = ''
         if(req.files){
             if(req.files.small_icon){
                 requestParam.small_icon = await new Promise((resolve, reject) => {
@@ -163,8 +165,6 @@ const sendNotification = async function(requestParam, req, done) {
             });*/
         }
         else{
-            requestParam.small_icon = ''
-            requestParam.big_icon = ''
             sendNotificationUser(requestParam, users);
             done(null, {})
         }

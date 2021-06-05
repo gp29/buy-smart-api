@@ -134,4 +134,26 @@ router.get('/get-about-us-content', async(req, res) => {
     }
 });
 
+router.get('/get-offer', async(req, res) => {
+    req.query.code = 'EN';
+    try {
+        if (req.query.user_id) {
+            let response = await authHandler.offer(req.query, req);
+            jsonResponse(res, responseCodes.OK, errors.noError(), response);
+        } else {
+            jsonResponse(res, responseCodes.BadRequest, errors.missingParameters(true, req.query.code), null);
+            return;
+        }
+    } catch (error) {
+        console.log(error)
+        try {
+            jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+            return;
+        } catch (error) {
+            jsonResponse(res, responseCodes.InternalServer, errors.internalServer(true, req.query.code), null);
+            return;
+        }
+    }
+});
+
 module.exports = router;

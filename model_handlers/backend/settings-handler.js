@@ -9,6 +9,7 @@ const queryApi = require('./../../utils/query-creator-api');
 let asyncLoop = require('async');
 let _ = require('underscore');
 const Setting = require('./../../models/settings');
+const timeZone = require('moment-timezone');
 
 const redis = require("redis");
 const util = require('util');
@@ -69,7 +70,6 @@ const update = function(requestParam,done){
 
 const setFeed = async (requestParam, done) => {
     client3.flushdb( function (err, succeeded) {
-        console.log(succeeded);
         query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
             _id: 0,
             product_feed:1,
@@ -108,7 +108,6 @@ const setFeed = async (requestParam, done) => {
 
 const setAd = async (requestParam, done) => {
     client4.flushdb( function (err, succeeded) {
-        console.log(succeeded);
         query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
             _id: 0,
             display_ad:1,
@@ -120,7 +119,6 @@ const setAd = async (requestParam, done) => {
             let limit = display_ad;
             asyncLoop.forEachSeries(_.range(1, (total_category + 1)), async function(element, callbackSingleRec) {
                 element = element.toString();
-                console.log(element)
                 let data = await queryApi.selectWithAndFilter(dbConstants.dbSchema.products, {category_id: element}, {
                     _id: 0,
                     created_at: 0,
@@ -130,7 +128,6 @@ const setAd = async (requestParam, done) => {
                     skip,
                     limit
                 });
-                console.log(data.length)
                 client4.set(element, JSON.stringify(data));
                 callbackSingleRec();
             }, function(){
@@ -140,9 +137,53 @@ const setAd = async (requestParam, done) => {
     });
 };
 
+const autoCronJob = (req, done) => {
+    query.selectWithAndFilterOne(dbConstants.dbSchema.settings, {}, {
+        _id: 0,
+        settings_id:1,
+        is_cron_on:1,
+        cron_run_mins:1,
+        last_cron_run_date:1,
+    }, {}, {}, async (error, settings) => {
+        if(settings.is_cron_on == true){
+            if(!settings.last_cron_run_date){
+                query.updateSingle(dbConstants.dbSchema.settings,{last_cron_run_date:new Date()}, { 'settings_id':settings.settings_id},function (error, settings) {
+                    setFeed();
+                    setAd();
+                    done(null, {});
+                    return;
+                });
+            }
+            else{
+                let todayDate = timeZone(new Date()).tz('Asia/Kolkata');
+                let from_date = timeZone(new Date(settings.last_cron_run_date)).tz('Asia/Kolkata');
+                const minutes = todayDate.diff(from_date, 'minutes');
+                console.log("Cron minutes", minutes)
+                if(minutes == settings.cron_run_mins){
+                    query.updateSingle(dbConstants.dbSchema.settings,{last_cron_run_date:new Date()}, { 'settings_id':settings.settings_id},function (error, settings) {
+                        setFeed();
+                        setAd();
+                        done(null, {});
+                        return;
+                    });
+                }
+                else{
+                    done(null, {});
+                    return;
+                }
+            }
+        }
+        else{
+            done(null, {});
+            return;
+        }
+    });
+};
+
 module.exports = {
 	get,
 	update,
     setFeed,
-    setAd
+    setAd,
+    autoCronJob
 };

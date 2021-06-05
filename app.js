@@ -101,6 +101,17 @@ app.use((req, res) => {
 	jsonResponse(res, errors.resourceNotFound(true), null);
 });
 
+cron.schedule('* * * * *', function() {
+    request.post({
+	    headers: {
+	        'content-type': 'application/x-www-form-urlencoded',
+	    },
+	    url: config.base_url+'backend/settings/auto-cron-job',
+    }, function(error, response, body) {
+    });
+});
+
+
 // development error handler
 // will print stacktrace
 

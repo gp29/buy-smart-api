@@ -12,6 +12,8 @@ const versionRef = admin.database().ref('version_selectors');
 
 module.exports = {
 	default_language:'EN',
+	base_url:'http://localhost:3001/',
+	//base_url:'http://143.110.249.142:3001/',
 	appName: 'Buy Smart',
 	port: '3001',
 	mode: 'development',

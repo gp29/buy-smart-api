@@ -47,6 +47,13 @@ var settingSchema = new Schema({
         type: Boolean,
         default: false
     },
+    cron_run_mins: {
+        type: Number,
+        default: 0
+    },
+    last_cron_run_date: {
+        type: Date
+    },
 });
 
 

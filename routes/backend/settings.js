@@ -50,4 +50,14 @@ router.get('/set-ad',function (req, res) {
 	});
 });
 
+router.post('/auto-cron-job',function (req, res) {
+	settingHandler.autoCronJob(req,function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
 module.exports = router;

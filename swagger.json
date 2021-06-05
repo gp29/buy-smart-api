@@ -277,6 +277,13 @@
                     "schema": {
                         "type": "string"
                     }
+                },{
+                    "name": "host",
+                    "in": "query",
+                    "description": "Optional",
+                    "schema": {
+                        "type": "string"
+                    }
                 }],
                 "operationId": "AuthController.offer"
             }

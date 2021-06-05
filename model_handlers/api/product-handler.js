@@ -202,7 +202,7 @@ const dataInsert = async(singleRec, code) => {
                 }]
                 let product = await query.insertSingle(dbConstants.dbSchema.products, singleRec);
                 client.set(singleRec.Img_key, product.Index);
-                resolve(singleRec);
+                resolve(product);
                 return;
             }
             else{
@@ -320,7 +320,8 @@ const dataInsert = async(singleRec, code) => {
 
                 await query.updateSingle(dbConstants.dbSchema.products, updateObj, { Index: parseFloat(res) });
                 await query.updateMultiple(dbConstants.dbSchema.results, updateObj, { Index: parseFloat(res) });
-                resolve(updateObj);
+                let back_product = await query.selectWithAndOne(dbConstants.dbSchema.products, { Index: parseFloat(res) }, { _id: 0, created_at:0, updated_at:0, __v:0} );
+                resolve(back_product);
                 return;
             }
         } catch (error) {

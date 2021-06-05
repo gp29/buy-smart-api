@@ -43,6 +43,10 @@ var settingSchema = new Schema({
         type: Number,
         default: 0
     },
+    is_cron_on: {
+        type: Boolean,
+        default: false
+    },
 });
 
 

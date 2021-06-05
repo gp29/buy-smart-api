@@ -186,11 +186,11 @@ const offer = async(requestParam, req) => {
             if(requestParam.host){
                 columnAndValues.host = requestParam.host
             }
-            let obj = {}
+            //let obj = {}
             let offers = await query.selectWithAnd(dbConstants.dbSchema.offers, columnAndValues, { _id: 0, created_at:0, updated_at:0, __v:0} );
             _.each(offers, (elem) => {
                 elem.banner = fullUrl+'/banner/'+elem.banner;
-                let keys = Object.keys(obj)
+                /*let keys = Object.keys(obj)
                 if(keys.includes(elem.host) == true){
                     let arr = obj[elem.host]
                     arr.push(elem);
@@ -199,9 +199,9 @@ const offer = async(requestParam, req) => {
                 }
                 else{
                     obj[elem.host] = [elem]
-                }
+                }*/
             })
-            resolve(obj);
+            resolve(offers);
             return;
         } catch (error) {
             console.log(error)

@@ -50,4 +50,24 @@ router.post('/create',function (req, res) {
 	});
 });
 
+router.post('/get-results',function (req, res) {
+	productHandler.getResults(req.body, function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
+router.post('/result-action',function (req, res) {
+	productHandler.actionResult(req.body, function (error, response) {
+		if (error) {
+			jsonResponse(res, error.code, errors.formatErrorForWire(error), null);
+			return;
+		}
+		jsonResponse(res, responseCodes.OK, errors.noError(), response);
+	});
+});
+
 module.exports = router;

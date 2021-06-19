@@ -39,6 +39,7 @@
 		"geolib": "^2.0.24",
 		"google-distance": "^1.0.1",
 		"https": "^1.0.0",
+		"image-downloader": "^4.0.2",
 		"istanbul": "0.4.5",
 		"json2csv": "^3.7.3",
 		"jsonfile": "3.0.1",

@@ -7,6 +7,10 @@ var offerSchema = new Schema({
         type: String,
         default: ''
     },
+    target_url: {
+        type: String,
+        default: ''
+    },
     host: {
         type: String,
         default: ''

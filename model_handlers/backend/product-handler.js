@@ -315,10 +315,56 @@ const removeKeyFromRedis = (requestParam,done) => {
     });
 };
 
+const getResults = function(requestParam, done){
+    let page = requestParam.page ? requestParam.page : 0;
+    let limit = requestParam.sizePerPage ? requestParam.sizePerPage : 50;
+    var obj = {};
+    let skip = page * limit;
+    query.countRecord(dbConstants.dbSchema.results, {}, function(error, count) {
+        query.selectWithAndFilter(dbConstants.dbSchema.results, {}, {
+            _id: 0,
+        }, {created_at:-1}, {
+            skip,
+            limit
+        }, (error, response) => {
+            if (error) {
+                logger('Error: can not get ', dbConstants.dbSchema.results);
+                done(errors.internalServer(true), null);
+                return;
+            }
+            obj.product = response;
+            obj.count = count;
+            done(null, obj);
+        });
+    });
+};
+
+const actionResult = (requestParam, done) =>{
+    if (requestParam['type']=="delete") {
+        query.removeMultiple(dbConstants.dbSchema.results, {
+            'result_id': {
+                $in: requestParam['ids']
+            }
+        }, function(error, data) {
+            if (error) {
+                logger('Error: can not delete ');
+                done(error, null);
+                return;
+            }
+            done(null, data);
+        });        
+    }
+    else{
+        don(null, {})
+    }
+};
+
 module.exports = {
 	get,
     importFile,
     action,
     getImageKeyExtract,
     getProductKeyExtract,
+    getResults,
+    actionResult
 };

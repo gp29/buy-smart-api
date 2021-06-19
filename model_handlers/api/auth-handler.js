@@ -9,22 +9,35 @@ let async = require('async');
 let _ = require('underscore');
 const User = require('./../../models/user');
 var mv = require('mv');
+var moment = require('moment');
 var jwt = require("jsonwebtoken");
+const download = require('image-downloader')
 
 const signin = async(requestParam, req) => {
     return new Promise(async(resolve, reject) => {
         try {
             let response = await query.countRecord(dbConstants.dbSchema.users, { social_id: requestParam.social_id});
-            if(req.files){
-                if(req.files.profile_picture){
+            if(requestParam.profile_picture){
+                if(requestParam.profile_picture != ''){
+                    let imageName = moment() +'.jpg'  
+                    const options = {
+                      url: requestParam.profile_picture,
+                      dest: './public/profile_picture/'+ imageName            // will be saved to /path/to/dest/image.jpg
+                    }
                     requestParam.profile_picture = await new Promise((solve, reject) => {
-                        mv(req.files.profile_picture.path, './public/profile_picture/'+req.files.profile_picture.name, function(err) {
+                        download.image(options)
+                        .then(({ filename }) => {
+                            console.log(imageName)
+                            solve(imageName)
+                        })
+                        .catch((err) => console.error(err))
+                        /*mv(req.files.profile_picture.path, './public/profile_picture/'+req.files.profile_picture.name, function(err) {
                             if(err){
                                 reject(errors.internalServer(true, requestParam.code));
                                 return;
                             }
                             solve(req.files.profile_picture.name)
-                        });
+                        });*/
                     });
                 }
             }

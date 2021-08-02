@@ -91,6 +91,10 @@ var resultSchema = new Schema({
         type: Number,
         default:0
     },
+    is_update: {
+        type: Boolean,
+        default:true
+    },
     Price_arr: {
         type: Array,
         default:[]

@@ -369,6 +369,13 @@
                     "schema": {
                         "type": "string"
                     }
+                }, {
+                    "name": "is_update",
+                    "in": "query",
+                    "description": "Optional => Pass true or false",
+                    "schema": {
+                        "type": "boolean"
+                    }
                 }],
                 "operationId": "ProductController.GetResults"
             }

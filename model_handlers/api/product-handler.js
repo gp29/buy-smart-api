@@ -69,9 +69,21 @@ const getResults = async(requestParam, code) => {
                 		}
                 	}))
             		if(is_result_assign){
+                        if(requestParam.is_update && requestParam.is_update == false){
+                            let rsl = await query.selectWithAndOne(dbConstants.dbSchema.results, {result_id: result_id, is_update:false}, { _id: 0, result_id:1} );
+                            if(rsl){
+                                let arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: result_id}}, { _id: 0, created_at:0, updated_at:0, __v:0} );;
+                                resolve(arr)
+                                return
+                            }
+                        }
             			asyncLoop.forEachSeries(products, async function(singleRec, callbackSingleRec) {
             				singleRec = JSON.parse(JSON.stringify(singleRec));
                     		singleRec.result_id = result_id;
+                            singleRec.is_update = true
+                            if(requestParam.is_update && requestParam.is_update == false){
+                                singleRec.is_update = false
+                            }
                     		let response = await query.selectWithAndOne(dbConstants.dbSchema.results, {result_id: result_id, Product_Url:singleRec.Product_Url}, { _id: 0, result_id:1} );
                     		if(!response){
                     			await query.insertSingle(dbConstants.dbSchema.results, singleRec);
@@ -86,7 +98,7 @@ const getResults = async(requestParam, code) => {
             		}
             		else{
 		                updateQueryCountGetResult(indexArr)
-		                insertResultData(products);
+		                insertResultData(products, requestParam);
 		                resolve(products)
 		                return
             		}
@@ -115,13 +127,17 @@ const updateQueryCountGetResult = async(indexArr) => {
     })
 }
 
-const insertResultData = async(products) => {
+const insertResultData = async(products, requestParam) => {
     return new Promise(async(resolve, reject) => {
         try {
             idGenerator.generateId('results', 'result_id', 'RES', (err, ID) => {
                 asyncLoop.forEachSeries(products, async function(singleRec, callbackSingleRec) {
                     singleRec = JSON.parse(JSON.stringify(singleRec));
                     singleRec.result_id = ID;
+                    singleRec.is_update = true
+                    if(requestParam.is_update && requestParam.is_update == false){
+                        singleRec.is_update = false
+                    }
                     let result = await query.insertSingle(dbConstants.dbSchema.results, singleRec);
                     let res = await client2.get(singleRec.Product_key)
                     if(res){

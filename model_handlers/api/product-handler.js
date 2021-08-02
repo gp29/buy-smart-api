@@ -78,7 +78,7 @@ const getResults = async(requestParam, code) => {
                     			client2.set(singleRec.Product_key, result_id);
                     		}
                     		callbackSingleRec();
-            			}, function(){
+            			}, async function(){
             				let arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: result_id}}, { _id: 0, created_at:0, updated_at:0, __v:0} );;
             				resolve(arr)
 		                	return

@@ -53,44 +53,10 @@ const getResults = async(requestParam, code) => {
                 callbackSingleRec();
             }, async function(){
                 let products = await query.selectWithAnd(dbConstants.dbSchema.products, {Index: {$in: indexArr}}, { _id: 0, created_at:0, updated_at:0, __v:0} );
-                let productKey = []
-                asyncLoop.forEachSeries(products, async function(singleRec, callbackSingleRec) {
-                	let Product_key = await productHandler.getProductKeyExtract(singleRec.Product_Url);
-                	productKey.push(Product_key)
-                	callbackSingleRec();
-                }, async function(){
-            		let is_result_assign = false;
-            		let result_id;
-                	await Promise.all(productKey.map(async (key) => {
-                		let res = await client2.get(key);
-                		if(res){
-                			is_result_assign = true
-                			result_id = res;
-                		}
-                	}))
-            		if(is_result_assign){
-            			asyncLoop.forEachSeries(products, async function(singleRec, callbackSingleRec) {
-            				singleRec = JSON.parse(JSON.stringify(singleRec));
-                    		singleRec.result_id = result_id;
-                    		let response = await query.selectWithAndOne(dbConstants.dbSchema.results, {result_id: result_id, Product_Url:singleRec.Product_Url}, { _id: 0, result_id:1} );
-                    		if(!response){
-                    			await query.insertSingle(dbConstants.dbSchema.results, singleRec);
-                    			client2.set(singleRec.Product_key, result_id);
-                    		}
-                    		callbackSingleRec();
-            			}, function(){
-            				let arr = await query.selectWithAnd(dbConstants.dbSchema.results, {result_id: {$in: result_id}}, { _id: 0, created_at:0, updated_at:0, __v:0} );;
-            				resolve(arr)
-		                	return
-            			});
-            		}
-            		else{
-		                updateQueryCountGetResult(indexArr)
-		                insertResultData(products);
-		                resolve(products)
-		                return
-            		}
-                })
+                updateQueryCountGetResult(indexArr)
+                insertResultData(products);
+                resolve(products)
+                return
             });
         } catch (error) {
             console.log(error);
